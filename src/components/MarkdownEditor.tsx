@@ -23,17 +23,20 @@ const MarkdownEditor = ({
   placeholder = 'Write something...'
 }: MarkdownEditorProps) => {
   const [markdown, setMarkdown] = useState(initialContent)
-  const [turndownService] = useState(() => new TurndownService({
-    headingStyle: 'atx',
-    codeBlockStyle: 'fenced',
-    emDelimiter: '*'
-  }))
-  
+  const [turndownService] = useState(
+    () =>
+      new TurndownService({
+        headingStyle: 'atx',
+        codeBlockStyle: 'fenced',
+        emDelimiter: '*'
+      })
+  )
+
   // Reference to track if the update is coming from the source editor
-  const updatingFromSource = useRef(false);
+  const updatingFromSource = useRef(false)
 
   // Convert initial markdown to HTML for the editor
-  const initialHtml = marked(initialContent);
+  const initialHtml = marked(initialContent)
 
   const editor = useEditor({
     extensions: [
@@ -49,10 +52,10 @@ const MarkdownEditor = ({
     content: initialHtml,
     onUpdate: ({ editor }) => {
       if (updatingFromSource.current) {
-        updatingFromSource.current = false;
-        return;
+        updatingFromSource.current = false
+        return
       }
-      
+
       const html = editor.getHTML()
       const md = turndownService.turndown(html)
       setMarkdown(md)
@@ -76,27 +79,30 @@ const MarkdownEditor = ({
 
     // Add rules for strikethrough if needed
     turndownService.addRule('strikethrough', {
-      filter: ['s', 'strike', 'del'],
+      filter: (node: HTMLElement) => {
+        const tagName = node.tagName.toLowerCase()
+        return ['s', 'strike', 'del'].includes(tagName)
+      },
       replacement: content => `~~${content}~~`
     })
   }, [turndownService])
 
   // Handle source markdown changes
   const handleSourceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const newMarkdown = e.target.value;
-    setMarkdown(newMarkdown);
-    
+    const newMarkdown = e.target.value
+    setMarkdown(newMarkdown)
+
     // Update the editor content
     if (editor) {
-      updatingFromSource.current = true;
-      
+      updatingFromSource.current = true
+
       // Convert markdown to HTML using marked
-      const html = marked(newMarkdown);
-      editor.commands.setContent(html);
+      const html = marked(newMarkdown)
+      editor.commands.setContent(html)
     }
-    
-    onChange?.(newMarkdown);
-  };
+
+    onChange?.(newMarkdown)
+  }
 
   return (
     <div className="markdown-editor-container">

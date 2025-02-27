@@ -13,7 +13,7 @@ jest.mock('@tiptap/react', () => ({
     }),
     isActive: jest.fn().mockReturnValue(false)
   }),
-  EditorContent: ({ editor }: { editor: any }) => (
+  EditorContent: ({}: { editor: any }) => (
     <div data-testid="editor-content">Editor Content</div>
   )
 }))

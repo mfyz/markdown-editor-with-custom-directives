@@ -61,7 +61,10 @@ This project uses:
 - Husky for Git hooks
 - lint-staged for running linters on staged files
 
-The pre-commit hook will automatically run Prettier on staged files.
+The pre-commit hook will:
+
+1. Automatically run Prettier on staged files
+2. Run all unit tests to ensure code quality
 
 The lint-staged configuration is set up to format JavaScript, TypeScript, Markdown, JSON, CSS, and HTML files.
 
