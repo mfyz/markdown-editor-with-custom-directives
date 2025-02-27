@@ -1,0 +1,14 @@
+{
+  "recommendations": [
+    "standard.vscode-standard",
+    "ms-vscode.vscode-typescript-next",
+    "orta.vscode-jest",
+    "ms-playwright.playwright",
+    "christian-kohler.path-intellisense",
+    "formulahendry.auto-rename-tag"
+  ],
+  "unwantedRecommendations": [
+    "esbenp.prettier-vscode",
+    "dbaeumer.vscode-eslint"
+  ]
+}
