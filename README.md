@@ -52,3 +52,10 @@ export default tseslint.config({
   },
 })
 ```
+
+## Development
+
+This project uses:
+- Prettier for code formatting
+- Husky for Git hooks
+- lint-staged for running linters on staged files
