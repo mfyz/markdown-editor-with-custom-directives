@@ -1,5 +1,14 @@
 import { Editor } from '@tiptap/react'
 import './EditorToolbar.css'
+import { FiBold, FiItalic, FiUnderline, FiList, FiCode } from 'react-icons/fi'
+import {
+  RiH1,
+  RiH2,
+  RiH3,
+  RiListOrdered,
+  RiStrikethrough,
+  RiDoubleQuotesL
+} from 'react-icons/ri'
 
 interface EditorToolbarProps {
   editor: Editor | null
@@ -17,28 +26,28 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         className={editor.isActive('bold') ? 'is-active' : ''}
         title="Bold"
       >
-        <strong>B</strong>
+        <FiBold />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleItalic().run()}
         className={editor.isActive('italic') ? 'is-active' : ''}
         title="Italic"
       >
-        <em>I</em>
+        <FiItalic />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleUnderline().run()}
         className={editor.isActive('underline') ? 'is-active' : ''}
         title="Underline"
       >
-        <u>U</u>
+        <FiUnderline />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleStrike().run()}
         className={editor.isActive('strike') ? 'is-active' : ''}
         title="Strike"
       >
-        <s>S</s>
+        <RiStrikethrough />
       </button>
       <div className="divider" />
       <button
@@ -46,21 +55,21 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         className={editor.isActive('heading', { level: 1 }) ? 'is-active' : ''}
         title="Heading 1"
       >
-        H1
+        <RiH1 />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         className={editor.isActive('heading', { level: 2 }) ? 'is-active' : ''}
         title="Heading 2"
       >
-        H2
+        <RiH2 />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         className={editor.isActive('heading', { level: 3 }) ? 'is-active' : ''}
         title="Heading 3"
       >
-        H3
+        <RiH3 />
       </button>
       <div className="divider" />
       <button
@@ -68,14 +77,14 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         className={editor.isActive('bulletList') ? 'is-active' : ''}
         title="Bullet List"
       >
-        • List
+        <FiList />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         className={editor.isActive('orderedList') ? 'is-active' : ''}
         title="Ordered List"
       >
-        1. List
+        <RiListOrdered />
       </button>
       <div className="divider" />
       <button
@@ -83,14 +92,14 @@ const EditorToolbar = ({ editor }: EditorToolbarProps) => {
         className={editor.isActive('codeBlock') ? 'is-active' : ''}
         title="Code Block"
       >
-        {'</>'}
+        <FiCode />
       </button>
       <button
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         className={editor.isActive('blockquote') ? 'is-active' : ''}
         title="Blockquote"
       >
-        "Quote"
+        <RiDoubleQuotesL />
       </button>
     </div>
   )

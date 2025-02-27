@@ -3,16 +3,19 @@
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-    Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  height: 400px;
+  font-family:
+    -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu,
+    Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  height: 600px; /* Increased height for better scrolling demonstration */
 }
 
-.source-editor, .rich-editor {
+.source-editor,
+.rich-editor {
   flex: 1;
   display: flex;
   flex-direction: column;
   height: 100%;
+  overflow: hidden; /* Prevent container from scrolling */
 }
 
 .source-editor {
@@ -23,6 +26,8 @@
   padding: 0.5rem 1rem;
   background-color: #f8f9fa;
   border-bottom: 1px solid #ccc;
+  flex-shrink: 0; /* Prevent header from shrinking */
+  z-index: 10; /* Ensure header stays on top */
 }
 
 .editor-header h3 {
@@ -32,57 +37,59 @@
   color: #495057;
 }
 
+.editor-toolbar-container {
+  flex-shrink: 0; /* Prevent toolbar from shrinking */
+  z-index: 10; /* Ensure toolbar stays on top */
+  background-color: #fff;
+  border-bottom: 1px solid #eee;
+}
+
+/* Markdown source textarea */
 .markdown-source {
   flex: 1;
   padding: 1rem;
   border: none;
   resize: none;
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
+  font-family:
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
   font-size: 0.875rem;
   line-height: 1.5;
   outline: none;
-  overflow-y: auto;
+  overflow-y: auto; /* Allow content area to scroll */
 }
 
+/* Rich text editor content area */
 .markdown-editor-content {
-  padding: 1rem;
   flex: 1;
-  overflow-y: auto;
+  padding: 1rem;
   outline: none;
-  text-align: left;
+  text-align: left; /* Ensure text is left-aligned */
+  overflow-y: auto; /* Allow content area to scroll */
+}
+
+/* Ensure the EditorContent component takes up remaining space and allows scrolling */
+.rich-editor-content-wrapper {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+}
+
+.rich-editor .ProseMirror {
+  height: 100%;
+  overflow-y: auto;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .markdown-editor-content p {
-  margin: 0.5em 0;
-}
-
-.markdown-editor-content p.is-editor-empty:first-child::before {
-  color: #adb5bd;
-  content: attr(data-placeholder);
-  float: left;
-  height: 0;
-  pointer-events: none;
-}
-
-.markdown-editor-content a {
-  color: #0d6efd;
-  text-decoration: underline;
-}
-
-.markdown-editor-content strong {
-  font-weight: bold;
-}
-
-.markdown-editor-content em {
-  font-style: italic;
-}
-
-.markdown-editor-content u {
-  text-decoration: underline;
-}
-
-.markdown-editor-content s {
-  text-decoration: line-through;
+  margin-bottom: 1rem;
 }
 
 .markdown-editor-content h1,
@@ -91,53 +98,101 @@
 .markdown-editor-content h4,
 .markdown-editor-content h5,
 .markdown-editor-content h6 {
-  margin-top: 1em;
-  margin-bottom: 0.5em;
-  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
   line-height: 1.25;
 }
 
 .markdown-editor-content h1 {
-  font-size: 2em;
+  font-size: 2rem;
 }
 
 .markdown-editor-content h2 {
-  font-size: 1.5em;
+  font-size: 1.5rem;
 }
 
 .markdown-editor-content h3 {
-  font-size: 1.25em;
+  font-size: 1.25rem;
+}
+
+.markdown-editor-content h4 {
+  font-size: 1rem;
+}
+
+.markdown-editor-content h5 {
+  font-size: 0.875rem;
+}
+
+.markdown-editor-content h6 {
+  font-size: 0.85rem;
 }
 
 .markdown-editor-content ul,
 .markdown-editor-content ol {
-  padding-left: 2em;
-  margin: 0.5em 0;
+  margin-bottom: 1rem;
+  padding-left: 2rem;
+}
+
+.markdown-editor-content li > ul,
+.markdown-editor-content li > ol {
+  margin-bottom: 0;
 }
 
 .markdown-editor-content blockquote {
-  border-left: 4px solid #ccc;
+  border-left: 4px solid #ddd;
+  padding-left: 1rem;
   margin-left: 0;
-  padding-left: 1em;
-  color: #6c757d;
+  margin-right: 0;
+  font-style: italic;
 }
 
 .markdown-editor-content pre {
-  background-color: #f5f5f5;
-  padding: 0.75em;
-  border-radius: 4px;
+  background-color: #f6f8fa;
+  border-radius: 3px;
+  padding: 1rem;
   overflow-x: auto;
 }
 
 .markdown-editor-content code {
-  background-color: #f5f5f5;
-  padding: 0.2em 0.4em;
+  background-color: #f6f8fa;
   border-radius: 3px;
-  font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, monospace;
-  font-size: 0.9em;
+  padding: 0.2em 0.4em;
+  font-family:
+    SFMono-Regular,
+    Consolas,
+    Liberation Mono,
+    Menlo,
+    monospace;
 }
 
 .markdown-editor-content pre code {
   background-color: transparent;
   padding: 0;
+}
+
+.markdown-editor-content img {
+  max-width: 100%;
+  height: auto;
+}
+
+.markdown-editor-content hr {
+  border: 0;
+  border-top: 1px solid #ddd;
+  margin: 2rem 0;
+}
+
+.markdown-editor-content table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.markdown-editor-content table th,
+.markdown-editor-content table td {
+  border: 1px solid #ddd;
+  padding: 0.5rem;
+}
+
+.markdown-editor-content table th {
+  background-color: #f6f8fa;
 }

@@ -119,10 +119,14 @@ const MarkdownEditor = ({
       </div>
       <div className="rich-editor">
         <div className="editor-header">
-          <h3>Rich Editor</h3>
+          <h3>Rich Text Editor</h3>
         </div>
-        <EditorToolbar editor={editor} />
-        <EditorContent editor={editor} />
+        <div className="editor-toolbar-container">
+          <EditorToolbar editor={editor} />
+        </div>
+        <div className="rich-editor-content-wrapper">
+          <EditorContent editor={editor} />
+        </div>
       </div>
     </div>
   )

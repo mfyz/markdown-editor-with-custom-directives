@@ -1,0 +1,38 @@
+# MARKDOWN EDITOR PROJECT RULES
+
+## CODE DISCIPLINE
+
+- Make focused changes only related to current feature
+- No refactoring unrelated code
+- Use minimal changes to achieve functionality
+- Keep components isolated and independent
+- Document exceptions when modifying unrelated code
+
+## TESTING
+
+- Treat tests as immutable unless feature changes
+- Write tests before implementing features
+- Never reduce test coverage
+- Investigate test failures thoroughly
+
+## WORKFLOW
+
+- Use `npm run dev` for development (prevents multiple servers)
+- Rely on Vite's hot module replacement
+- Use Prettier for formatting (not ESLint)
+- Run tests and lint before committing
+
+## EDITOR REQUIREMENTS
+
+- Maintain dual-pane layout (markdown source + rich text)
+- Ensure bidirectional syncing between panes
+- Keep text left-aligned, not center-aligned
+- Use compact UI elements and toolbar
+- Support standard markdown formatting
+- Implement custom directives for colors and buttons
+
+## CURRENT STATUS
+
+- Completed basic editor with dual-pane layout
+- Implemented bidirectional syncing
+- Created compact toolbar with formatting options
