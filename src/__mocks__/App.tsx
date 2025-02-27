@@ -1,4 +1,4 @@
-function App () {
+function App() {
   return (
     <div>
       <img src="vite.svg" alt="vite logo" />

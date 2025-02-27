@@ -1,6 +1,6 @@
 {
   "recommendations": [
-    "standard.vscode-standard",
+    "esbenp.prettier-vscode",
     "ms-vscode.vscode-typescript-next",
     "orta.vscode-jest",
     "ms-playwright.playwright",
@@ -8,7 +8,7 @@
     "formulahendry.auto-rename-tag"
   ],
   "unwantedRecommendations": [
-    "esbenp.prettier-vscode",
-    "dbaeumer.vscode-eslint"
+    "dbaeumer.vscode-eslint",
+    "standard.vscode-standard"
   ]
 }

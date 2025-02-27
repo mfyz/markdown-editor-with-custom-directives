@@ -33,8 +33,7 @@ After evaluating several options, we'll use one of these established markdown ed
 
 ### Development Tools
 - **[Vite](https://vitejs.dev/)**: For fast development and building
-- **[ts-standard](https://github.com/standard/ts-standard)**: For TypeScript code linting using StandardJS rules
-  - Note: We are using ts-standard directly, NOT ESLint or Prettier. This ensures a consistent code style without additional dependencies.
+- **[Prettier](https://prettier.io/)**: For consistent code formatting
 - **[Husky](https://typicode.github.io/husky/)** & **[lint-staged](https://github.com/okonet/lint-staged)**: For pre-commit hooks to ensure code quality
 - **[Jest](https://jestjs.io/)**: For unit testing
 - **[React Testing Library](https://testing-library.com/docs/react-testing-library/intro/)**: For component testing
@@ -81,14 +80,14 @@ These principles will help us maintain a stable codebase, ensure that previously
 ## VSCode Configuration
 
 We'll set up VSCode with the following settings:
-- StandardJS extension for automatic linting and fixing
-- Auto-fix on save enabled for StandardJS
+- Prettier extension for automatic formatting
+- Format on save enabled for Prettier
 - Recommended extensions for React and TypeScript development
 
-This will help maintain code quality throughout the development process and make it easier to adhere to the StandardJS style guide while benefiting from TypeScript's type checking.
+This will help maintain code quality throughout the development process and make it easier to maintain consistent code style.
 
 ### Important Note on Code Formatting
-This project uses ts-standard for code formatting and linting. We explicitly avoid using ESLint or Prettier to prevent conflicts and to maintain a single source of truth for code style.
+This project uses Prettier for code formatting. We explicitly avoid using ESLint to prevent conflicts and to maintain a single source of truth for code style.
 
 ## Git Hooks Configuration
 
@@ -167,8 +166,8 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 - Set up React project with TypeScript and Vite
 - Install necessary dependencies
 - Create basic project structure
-- Set up StandardJS linting with TypeScript support
-- Configure VSCode for auto-fixing on typing/saving
+- Set up Prettier for code formatting
+- Configure VSCode for auto-formatting on typing/saving
 - Set up Husky pre-commit hooks for linting
 - Configure Jest and React Testing Library for testing
 - Set up Playwright for end-to-end testing
