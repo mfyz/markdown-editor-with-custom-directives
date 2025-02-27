@@ -59,3 +59,7 @@ This project uses:
 - Prettier for code formatting
 - Husky for Git hooks
 - lint-staged for running linters on staged files
+
+The pre-commit hook will automatically run Prettier on staged files.
+
+Note: You can test Husky by running `npx husky test` in your terminal.
