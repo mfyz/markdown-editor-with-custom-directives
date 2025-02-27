@@ -12,17 +12,21 @@ import './MarkdownEditor.css'
 import EditorToolbar from './EditorToolbar'
 
 interface MarkdownEditorProps {
-  initialContent?: string
-  onChange?: (markdown: string) => void
+  content: string
+  onChange: (markdown: string) => void
   placeholder?: string
+  className?: string
+  allowSourceView?: boolean
 }
 
 const MarkdownEditor = ({
-  initialContent = '',
+  content,
   onChange,
-  placeholder = 'Write something...'
+  placeholder = 'Write something...',
+  className = '',
+  allowSourceView = true
 }: MarkdownEditorProps) => {
-  const [markdown, setMarkdown] = useState(initialContent)
+  const [isSourceMode, setIsSourceMode] = useState(false)
   const [turndownService] = useState(
     () =>
       new TurndownService({
@@ -32,11 +36,13 @@ const MarkdownEditor = ({
       })
   )
 
-  // Reference to track if the update is coming from the source editor
+  // Reference to track if the update is coming from external source
+  const updatingFromExternal = useRef(false)
+  // Reference to track if the update is coming from source editor
   const updatingFromSource = useRef(false)
 
-  // Convert initial markdown to HTML for the editor
-  const initialHtml = marked(initialContent)
+  // Convert content to HTML for the editor
+  const initialHtml = marked(content)
 
   const editor = useEditor({
     extensions: [
@@ -51,15 +57,15 @@ const MarkdownEditor = ({
     ],
     content: initialHtml,
     onUpdate: ({ editor }) => {
-      if (updatingFromSource.current) {
+      if (updatingFromExternal.current || updatingFromSource.current) {
+        updatingFromExternal.current = false
         updatingFromSource.current = false
         return
       }
 
       const html = editor.getHTML()
       const md = turndownService.turndown(html)
-      setMarkdown(md)
-      onChange?.(md)
+      onChange(md)
     },
     editorProps: {
       attributes: {
@@ -87,46 +93,57 @@ const MarkdownEditor = ({
     })
   }, [turndownService])
 
+  // Update editor when content changes externally
+  useEffect(() => {
+    if (editor && content !== turndownService.turndown(editor.getHTML())) {
+      updatingFromExternal.current = true
+      const html = marked(content)
+      editor.commands.setContent(html)
+    }
+  }, [content, editor, turndownService])
+
   // Handle source markdown changes
   const handleSourceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newMarkdown = e.target.value
-    setMarkdown(newMarkdown)
+    onChange(newMarkdown)
 
     // Update the editor content
     if (editor) {
       updatingFromSource.current = true
-
-      // Convert markdown to HTML using marked
       const html = marked(newMarkdown)
       editor.commands.setContent(html)
     }
+  }
 
-    onChange?.(newMarkdown)
+  // Toggle between source and WYSIWYG modes
+  const toggleSourceMode = () => {
+    setIsSourceMode(!isSourceMode)
   }
 
   return (
-    <div className="markdown-editor-container">
-      <div className="source-editor">
-        <div className="editor-header">
-          <h3>Markdown Source</h3>
-        </div>
-        <textarea
-          className="markdown-source"
-          value={markdown}
-          onChange={handleSourceChange}
-          placeholder={placeholder}
+    <div className={`markdown-editor ${className}`}>
+      <div className="editor-toolbar-container">
+        <EditorToolbar
+          editor={editor}
+          disabled={isSourceMode}
+          isSourceMode={isSourceMode}
+          allowSourceView={allowSourceView}
+          onToggleSourceMode={toggleSourceMode}
         />
       </div>
-      <div className="rich-editor">
-        <div className="editor-header">
-          <h3>Rich Text Editor</h3>
-        </div>
-        <div className="editor-toolbar-container">
-          <EditorToolbar editor={editor} />
-        </div>
-        <div className="rich-editor-content-wrapper">
-          <EditorContent editor={editor} />
-        </div>
+      <div className="editor-content-container">
+        {isSourceMode && allowSourceView ? (
+          <textarea
+            className="markdown-source"
+            value={content}
+            onChange={handleSourceChange}
+            placeholder={placeholder}
+          />
+        ) : (
+          <div className="rich-editor-content-wrapper">
+            <EditorContent editor={editor} />
+          </div>
+        )}
       </div>
     </div>
   )

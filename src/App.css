@@ -2,15 +2,6 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 2rem;
-  text-align: center;
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
 }
 
 .app-container {
@@ -38,30 +29,7 @@
 
 .editor-container {
   width: 100%;
-}
-
-.editor-container h2,
-.preview-container h2 {
-  margin-bottom: 1rem;
-  font-size: 1.5rem;
-  color: #333;
-}
-
-.markdown-output {
-  background-color: #f8f9fa;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  padding: 1rem;
-  min-height: 150px;
-  white-space: pre-wrap;
-  word-break: break-word;
-  font-family:
-    SFMono-Regular,
-    Consolas,
-    Liberation Mono,
-    Menlo,
-    monospace;
-  font-size: 0.875rem;
-  line-height: 1.5;
-  overflow-x: auto;
+  height: 600px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

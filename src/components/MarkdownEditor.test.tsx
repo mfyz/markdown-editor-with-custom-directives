@@ -11,7 +11,11 @@ jest.mock('@tiptap/react', () => ({
         })
       })
     }),
-    isActive: jest.fn().mockReturnValue(false)
+    isActive: jest.fn().mockReturnValue(false),
+    getHTML: jest.fn().mockReturnValue('<p></p>'),
+    commands: {
+      setContent: jest.fn()
+    }
   }),
   EditorContent: ({}: { editor: any }) => (
     <div data-testid="editor-content">Editor Content</div>
@@ -20,17 +24,23 @@ jest.mock('@tiptap/react', () => ({
 
 describe('MarkdownEditor', () => {
   it('renders the editor', () => {
-    render(<MarkdownEditor />)
+    render(<MarkdownEditor content="" onChange={() => {}} />)
     expect(screen.getByTestId('editor-content')).toBeInTheDocument()
   })
 
   it('renders with initial content', () => {
-    render(<MarkdownEditor initialContent="# Test Content" />)
+    render(<MarkdownEditor content="# Test Content" onChange={() => {}} />)
     expect(screen.getByTestId('editor-content')).toBeInTheDocument()
   })
 
   it('renders with placeholder', () => {
-    render(<MarkdownEditor placeholder="Test Placeholder" />)
+    render(
+      <MarkdownEditor
+        content=""
+        onChange={() => {}}
+        placeholder="Test Placeholder"
+      />
+    )
     expect(screen.getByTestId('editor-content')).toBeInTheDocument()
   })
 })

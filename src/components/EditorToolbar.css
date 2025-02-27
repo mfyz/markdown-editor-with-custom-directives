@@ -1,44 +1,94 @@
 .editor-toolbar {
   display: flex;
-  flex-wrap: wrap;
-  padding: 0.15rem;
-  border-bottom: 1px solid #ccc;
+  justify-content: space-between;
+  padding: 0.25rem;
   background-color: #f8f9fa;
+  border-bottom: 1px solid #ccc;
+}
+
+.toolbar-buttons-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+}
+
+.toolbar-buttons-group.right {
+  margin-left: auto;
 }
 
 .editor-toolbar button {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 1.3rem;
-  height: 1.3rem;
+  width: 28px;
+  height: 28px;
   margin-right: 0.1rem;
   border: none;
   background: none;
-  border-radius: 3px;
+  border-radius: 4px;
   cursor: pointer;
   font-size: 0.75rem;
-  color: #495057;
-  padding: 0.15rem;
+  color: #555;
+  padding: 0.25rem;
+  outline: none; /* Remove focus outline */
+}
+
+.editor-toolbar button:focus {
+  outline: none; /* Remove focus outline */
 }
 
 .editor-toolbar button svg {
-  width: 0.9rem;
-  height: 0.9rem;
+  width: 16px;
+  height: 16px;
 }
 
 .editor-toolbar button:hover {
-  background-color: #e9ecef;
+  background-color: #f0f0f0;
 }
 
 .editor-toolbar button.is-active {
-  background-color: #e9ecef;
-  color: #0d6efd;
+  color: #0366d6;
+  background-color: #e6f0fa;
+}
+
+/* Source toggle button - not affected by disabled state */
+.editor-toolbar button.source-toggle {
+  opacity: 1 !important;
+  cursor: pointer !important;
+  outline: none; /* Remove focus outline */
+}
+
+.editor-toolbar button.source-toggle:focus {
+  outline: none; /* Remove focus outline */
+}
+
+.editor-toolbar button.source-toggle:hover {
+  background-color: #f0f0f0 !important;
+}
+
+.editor-toolbar button.source-toggle.is-active {
+  color: #0366d6 !important;
+  background-color: #e6f0fa !important;
 }
 
 .editor-toolbar .divider {
   width: 1px;
   height: 1rem;
-  margin: 0 0.15rem;
-  background-color: #dee2e6;
+  margin: 0 0.25rem;
+  background-color: #eee;
+}
+
+/* Disabled state */
+.editor-toolbar.disabled button:not(.source-toggle) {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.editor-toolbar.disabled button:not(.source-toggle):hover {
+  background-color: transparent;
+}
+
+.editor-toolbar.disabled button:not(.source-toggle).is-active {
+  color: #999;
+  background-color: #f0f0f0;
 }
