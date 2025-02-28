@@ -7,7 +7,8 @@ interface ButtonPickerModalProps {
   editor: Editor
   onClose: () => void
   initialUrl?: string
-  initialStyle?: string
+  initialShape?: string
+  initialColor?: string
   initialText?: string
   isEditMode?: boolean
   buttonPosition?: { from: number; to: number }
@@ -35,22 +36,16 @@ const ButtonPickerModal = ({
   editor,
   onClose,
   initialUrl = '',
-  initialStyle = 'pill-blue',
+  initialShape = '',
+  initialColor = '',
   initialText = '',
   isEditMode = false,
   buttonPosition
 }: ButtonPickerModalProps) => {
   const [buttonText, setButtonText] = useState(initialText)
   const [url, setUrl] = useState(initialUrl)
-
-  // Split the initial style into shape and color
-  const initialStyleParts = initialStyle.split('-')
-  const [selectedShape, setSelectedShape] = useState(
-    initialStyleParts[0] || 'pill'
-  )
-  const [selectedColor, setSelectedColor] = useState(
-    initialStyleParts[1] || 'blue'
-  )
+  const [selectedShape, setSelectedShape] = useState(initialShape || 'pill')
+  const [selectedColor, setSelectedColor] = useState(initialColor || 'blue')
 
   // Refs for input fields
   const buttonTextInputRef = useRef<HTMLInputElement>(null)
@@ -66,18 +61,7 @@ const ButtonPickerModal = ({
       }
       setButtonText(text)
     }
-
-    // Focus on the URL input if in edit mode, otherwise follow normal logic
-    setTimeout(() => {
-      if (isEditMode && urlInputRef.current) {
-        urlInputRef.current.focus()
-      } else if (!buttonText && buttonTextInputRef.current) {
-        buttonTextInputRef.current.focus()
-      } else if (urlInputRef.current) {
-        urlInputRef.current.focus()
-      }
-    }, 100)
-  }, [editor, buttonText, isEditMode])
+  }, [editor, isEditMode])
 
   const handleApplyButton = () => {
     if (!isEditMode && !buttonText) {
@@ -123,7 +107,7 @@ const ButtonPickerModal = ({
         .chain()
         .focus()
         .deleteRange({ from, to })
-        // .insertContent(buttonDirective)
+        .insertContent(buttonDirective)
         .run()
     }
 
@@ -153,20 +137,18 @@ const ButtonPickerModal = ({
         </div>
 
         <div className="color-picker-content">
-          {!isEditMode && (
-            <div className="form-group">
-              <label htmlFor="buttonText">Button Text</label>
-              <input
-                type="text"
-                id="buttonText"
-                value={buttonText}
-                onChange={e => setButtonText(e.target.value)}
-                placeholder="Enter button text"
-                className="color-text-input"
-                ref={buttonTextInputRef}
-              />
-            </div>
-          )}
+          <div className="form-group">
+            <label htmlFor="buttonText">Button Text</label>
+            <input
+              type="text"
+              id="buttonText"
+              value={buttonText}
+              onChange={e => setButtonText(e.target.value)}
+              placeholder="Enter button text"
+              className="color-text-input"
+              ref={buttonTextInputRef}
+            />
+          </div>
 
           <div className="form-group">
             <label htmlFor="buttonUrl">URL</label>

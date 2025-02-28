@@ -16,6 +16,7 @@
   pointer-events: all;
   font-size: inherit;
   vertical-align: baseline;
+  font-size: 0.9em;
 }
 
 .button-directive:active {
@@ -40,10 +41,11 @@ a.button-directive:hover {
 /* Shape styles */
 .button-directive.shape-pill {
   border-radius: 9999px;
+  padding: 2px 13px;
 }
 
-.button-directive.shape-rect {
-  border-radius: 4px;
+.button-directive.shape-rounded {
+  border-radius: 5px;
 }
 
 /* Color variants */

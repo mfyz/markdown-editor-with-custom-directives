@@ -390,8 +390,13 @@ const MarkdownEditor = ({
       replacement: (content, node) => {
         const element = node as HTMLElement
         const url = element.getAttribute('href') || ''
-        const shape = element.getAttribute('data-shape') || 'pill'
-        const color = element.getAttribute('data-color') || 'blue'
+
+        const classList = Array.from(element.classList)
+        const shapeClass = classList.find(cls => cls.startsWith('shape-'))
+        const colorClass = classList.find(cls => cls.startsWith('color-'))
+
+        const shape = shapeClass ? shapeClass.split('-')[1] : 'pill'
+        const color = colorClass ? colorClass.split('-')[1] : 'blue'
 
         return String.raw`:button[${content}]{url=${url} shape=${shape} color=${color}}`
       }
@@ -610,7 +615,8 @@ const MarkdownEditor = ({
             setIsEditingButton(false)
           }}
           initialUrl={currentButtonData.url}
-          initialStyle={`${currentButtonData.shape}-${currentButtonData.color}`}
+          initialShape={currentButtonData.shape}
+          initialColor={currentButtonData.color}
           initialText={currentButtonData.text}
           isEditMode={isEditingButton}
           buttonPosition={

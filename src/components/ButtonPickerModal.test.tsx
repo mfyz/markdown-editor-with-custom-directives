@@ -68,18 +68,38 @@ describe('ButtonPickerModal', () => {
         onClose={onCloseMock}
         isEditMode={true}
         initialUrl="https://example.com"
-        initialStyle="pill-blue"
+        initialShape="pill"
+        initialColor="blue"
         initialText="Edit Button Text"
         buttonPosition={{ from: 10, to: 25 }}
       />
     )
 
-    // Check if modal elements are rendered with edit mode title
-    expect(screen.getByText('Edit Button')).toBeInTheDocument()
-    expect(screen.queryByLabelText('Button Text')).not.toBeInTheDocument()
+    // Check that URL field is present
     expect(screen.getByLabelText('URL')).toBeInTheDocument()
-    expect(screen.getByDisplayValue('https://example.com')).toBeInTheDocument()
+    expect(screen.getByLabelText('URL')).toHaveValue('https://example.com')
+
+    // Check that button text is displayed in the preview
     expect(screen.getByText('Edit Button Text')).toBeInTheDocument()
+  })
+
+  it('renders in edit mode with button text field', () => {
+    render(
+      <ButtonPickerModal
+        editor={mockEditor as any}
+        onClose={onCloseMock}
+        isEditMode={true}
+        initialUrl="https://example.com"
+        initialShape="pill"
+        initialColor="blue"
+        initialText="Edit Button Text"
+        buttonPosition={{ from: 10, to: 25 }}
+      />
+    )
+
+    // Check that the button text field is present
+    expect(screen.getByLabelText('Button Text')).toBeInTheDocument()
+    expect(screen.getByLabelText('Button Text')).toHaveValue('Edit Button Text')
   })
 
   it('uses nodesBetween when in edit mode', () => {
@@ -91,7 +111,8 @@ describe('ButtonPickerModal', () => {
         onClose={onCloseMock}
         isEditMode={true}
         initialUrl="https://example.com"
-        initialStyle="pill-blue"
+        initialShape="pill"
+        initialColor="blue"
         initialText="Edit Button Text"
         buttonPosition={buttonPosition}
       />
@@ -129,7 +150,7 @@ describe('ButtonPickerModal', () => {
     expect(mockEditor.chain).toHaveBeenCalled()
     expect(mockEditor.focus).toHaveBeenCalled()
     expect(mockEditor.deleteRange).toHaveBeenCalled()
-    expect(mockEditor.insertContent).not.toHaveBeenCalled()
+    expect(mockEditor.insertContent).toHaveBeenCalled() // insertContent is now used in add mode
     expect(mockEditor.run).toHaveBeenCalled()
     expect(onCloseMock).toHaveBeenCalled()
   })
