@@ -24,17 +24,20 @@ const LinkModal = ({ editor, onClose }: LinkModalProps) => {
     e.preventDefault()
 
     if (!url) {
-      handleRemove()
+      editor.chain().focus().extendMarkRange('link').unsetLink().run()
+      onClose()
       return
     }
 
-    // Ensure URL has protocol
-    const urlWithProtocol =
-      url.startsWith('http://') || url.startsWith('https://')
+    // Ensure URL has https:// prefix
+    const normalizedUrl =
+      url.startsWith('https://') || url.startsWith('http://')
         ? url
         : `https://${url}`
 
-    editor.chain().focus().setLink({ href: urlWithProtocol }).run()
+    // console.log('normalizedUrl:', normalizedUrl)
+
+    editor.chain().focus().setLink({ href: normalizedUrl }).run()
     onClose()
   }
 
