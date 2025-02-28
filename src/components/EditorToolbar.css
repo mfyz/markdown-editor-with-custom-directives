@@ -4,6 +4,7 @@
   padding: 0.25rem;
   background-color: #f8f9fa;
   border-bottom: 1px solid #ccc;
+  position: relative; /* For tooltip overflow */
 }
 
 .toolbar-buttons-group {
@@ -17,6 +18,7 @@
 }
 
 .editor-toolbar button {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -30,7 +32,62 @@
   font-size: 0.75rem;
   color: #555;
   padding: 0.25rem;
-  outline: none; /* Remove focus outline */
+  outline: none;
+}
+
+/* Tooltip styles */
+.editor-toolbar button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -28px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 4px 8px;
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+/* Adjust tooltip position for first few buttons */
+.toolbar-buttons-group button:nth-child(-n + 3)[title]:hover::after {
+  left: 0;
+  transform: none;
+}
+
+/* Adjust tooltip position for last few buttons */
+.toolbar-buttons-group button:nth-last-child(-n + 3)[title]:hover::after {
+  left: auto;
+  right: 0;
+  transform: none;
+}
+
+/* Adjust arrow position accordingly */
+.toolbar-buttons-group button:nth-child(-n + 3)[title]:hover::before {
+  left: 10px;
+  transform: none;
+}
+
+.toolbar-buttons-group button:nth-last-child(-n + 3)[title]:hover::before {
+  left: auto;
+  right: 10px;
+  transform: none;
+}
+
+/* Tooltip arrow */
+.editor-toolbar button[title]:hover::before {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-width: 4px;
+  border-style: solid;
+  border-color: transparent transparent #333 transparent;
+  pointer-events: none;
 }
 
 .editor-toolbar button:focus {
