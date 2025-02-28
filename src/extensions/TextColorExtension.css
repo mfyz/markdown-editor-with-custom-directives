@@ -1,7 +1,14 @@
 .text-color-directive {
   display: inline;
+  white-space: normal;
 }
 
 .directive-syntax {
   display: none;
+}
+
+/* Ensure color directives work in single-line mode */
+.single-line-mode .text-color-directive {
+  white-space: nowrap;
+  display: inline;
 }

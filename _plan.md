@@ -4,7 +4,7 @@
 
 This project aims to create a React-based WYSIWYG markdown editor component with standard formatting options and custom markdown directives. The editor will support:
 
-- Basic text styling (bold, italic, underline, strikethrough)
+- Basic text styling (bold, italic, strikethrough)
 - Link functionality with edit/remove options
 - Custom markdown directives:
   1. Text colors (`:color[text]{#color}`)
@@ -238,7 +238,7 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ✅ **Checkpoint 3.1: Text Styling**
 
-- Implement bold, italic, underline, strikethrough functionality
+- Implement bold, italic, strikethrough functionality
 - Create toolbar with styling buttons
 - Ensure proper markdown generation
 - Write comprehensive tests for styling features

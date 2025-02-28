@@ -1,14 +1,6 @@
 import { Editor as TiptapEditor } from '@tiptap/react'
 import './EditorToolbar.css'
-import {
-  FiBold,
-  FiItalic,
-  FiUnderline,
-  FiList,
-  FiCode,
-  FiEye,
-  FiLink
-} from 'react-icons/fi'
+import { FiBold, FiItalic, FiList, FiCode, FiEye, FiLink } from 'react-icons/fi'
 import {
   RiH1,
   RiH2,
@@ -111,18 +103,6 @@ const EditorToolbar = ({
           disabled={disabled}
         >
           <FiItalic />
-        </button>
-        <button
-          onMouseDown={handleButtonMouseDown}
-          onClick={() => {
-            // @ts-ignore - These methods exist in the actual implementation
-            editor.chain().focus().toggleUnderline().run()
-          }}
-          className={editor.isActive('underline') ? 'is-active' : ''}
-          title="Underline (⌘U)"
-          disabled={disabled}
-        >
-          <FiUnderline />
         </button>
         <button
           onMouseDown={handleButtonMouseDown}

@@ -5,12 +5,22 @@ import { Decoration, DecorationSet } from 'prosemirror-view'
 // Regular expression to match color directives: :color[text]{#color}
 const colorDirectiveRegex = /:color\[(.*?)\]\{(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\}/g
 
+interface TextColorOptions {
+  preserveInSingleLine?: boolean
+}
+
 /**
  * Extension that adds support for color directives in the format:
  * :color[text]{#color}
  */
-export const TextColorExtension = Extension.create({
+export const TextColorExtension = Extension.create<TextColorOptions>({
   name: 'textColorDirective',
+
+  addOptions() {
+    return {
+      preserveInSingleLine: true
+    }
+  },
 
   addProseMirrorPlugins() {
     const key = new PluginKey('textColorDirective')

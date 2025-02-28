@@ -1,6 +1,5 @@
 import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
-import Underline from '@tiptap/extension-underline'
 import Link from '@tiptap/extension-link'
 import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
@@ -8,6 +7,7 @@ import Strike from '@tiptap/extension-strike'
 import { useState, useEffect, useRef } from 'react'
 import TurndownService from 'turndown'
 import { marked } from 'marked'
+import type { Renderer } from 'marked'
 import './MarkdownEditor.css'
 import EditorToolbar from './EditorToolbar'
 import LinkModal from './LinkModal'
@@ -15,6 +15,19 @@ import LinkPopover from './LinkPopover'
 import ColorPickerModal from './ColorPickerModal'
 import { TextColorExtension } from '../extensions/TextColorExtension'
 import '../extensions/TextColorExtension.css'
+
+// Add custom renderer for color directive
+const renderer: Partial<Renderer> = {
+  text(token) {
+    // Replace color directives with styled spans
+    return token.text.replace(
+      /:color\[(.*?)\]\{(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\}/g,
+      (_, content, color) => `<span style="color: ${color}">${content}</span>`
+    )
+  }
+}
+
+marked.use({ renderer })
 
 interface MarkdownEditorProps {
   content: string
@@ -44,14 +57,35 @@ const MarkdownEditor = ({
   const [currentLinkUrl, setCurrentLinkUrl] = useState('')
   const popoverRef = useRef<HTMLDivElement>(null)
   const [isEditorActive, setIsEditorActive] = useState(false)
-  const [turndownService] = useState(
-    () =>
-      new TurndownService({
-        headingStyle: 'atx',
-        codeBlockStyle: 'fenced',
-        emDelimiter: '*'
-      })
-  )
+  const [turndownService] = useState(() => {
+    const service = new TurndownService({
+      headingStyle: 'atx',
+      codeBlockStyle: 'fenced',
+      emDelimiter: '*'
+    })
+
+    // Override the escape function to preserve brackets and braces
+    service.escape = string => {
+      return (
+        string
+          .replace(/\*/g, '\\*')
+          .replace(/^-/g, '\\-')
+          .replace(/^\+ /g, '\\+ ')
+          .replace(/^(=+)/g, '\\$1')
+          .replace(/^(#{1,6}) /g, '\\$1 ')
+          .replace(/`/g, '\\`')
+          .replace(/^~~~/g, '\\~~~')
+          // Remove bracket and brace escaping
+          // .replace(/\[/g, '\\[')
+          // .replace(/\]/g, '\\]')
+          .replace(/^>/g, '\\>')
+          .replace(/_/g, '\\_')
+          .replace(/^(\d+)\. /g, '$1\\. ')
+      )
+    }
+
+    return service
+  })
 
   // Reference to track if the update is coming from external source
   const updatingFromExternal = useRef(false)
@@ -64,7 +98,6 @@ const MarkdownEditor = ({
   const editor = useEditor({
     extensions: [
       StarterKit,
-      Underline,
       Link.configure({
         openOnClick: false,
         HTMLAttributes: {
@@ -76,7 +109,9 @@ const MarkdownEditor = ({
       TextStyle,
       Color,
       Strike,
-      TextColorExtension
+      TextColorExtension.configure({
+        preserveInSingleLine: true
+      })
     ],
     content: initialHtml,
     editable: true,
@@ -151,12 +186,6 @@ const MarkdownEditor = ({
 
   // Configure turndown service
   useEffect(() => {
-    // Add rules for underline
-    turndownService.addRule('underline', {
-      filter: ['u'],
-      replacement: content => `<u>${content}</u>`
-    })
-
     // Add rules for strikethrough if needed
     turndownService.addRule('strikethrough', {
       filter: (node: HTMLElement) => {
@@ -185,7 +214,8 @@ const MarkdownEditor = ({
             hexColor = `#${r}${g}${b}`
           }
         }
-        return `:color[${content}]{${hexColor}}`
+        // Use String.raw to prevent escaping of special characters
+        return String.raw`:color[${content}]{${hexColor}}`
       }
     })
 
@@ -223,6 +253,7 @@ const MarkdownEditor = ({
     // Update the editor content
     if (editor) {
       updatingFromSource.current = true
+      marked.use({ renderer })
       const html = marked(newMarkdown)
       editor.commands.setContent(html)
     }

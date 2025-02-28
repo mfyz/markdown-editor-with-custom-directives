@@ -15,9 +15,6 @@ jest.mock('@tiptap/react', () => {
         toggleItalic: () => ({
           run: jest.fn()
         }),
-        toggleUnderline: () => ({
-          run: jest.fn()
-        }),
         toggleStrike: () => ({
           run: jest.fn()
         }),
@@ -145,7 +142,6 @@ describe('MarkdownEditor', () => {
       // Basic formatting
       expect(screen.getByTitle('Bold (⌘B)')).toBeInTheDocument()
       expect(screen.getByTitle('Italic (⌘I)')).toBeInTheDocument()
-      expect(screen.getByTitle('Underline (⌘U)')).toBeInTheDocument()
       expect(screen.getByTitle('Strikethrough')).toBeInTheDocument()
 
       // Headings

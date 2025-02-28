@@ -180,6 +180,16 @@
   margin: 0;
 }
 
+/* Ensure color directives work in single-line mode */
+.rich-editor-content-wrapper.single-line-mode .text-color-directive {
+  display: inline;
+  white-space: nowrap;
+}
+
+.rich-editor-content-wrapper.single-line-mode .directive-syntax {
+  display: none;
+}
+
 /* Single-line toolbar styles */
 .editor-toolbar.single-line-toolbar {
   position: absolute;
