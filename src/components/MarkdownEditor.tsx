@@ -49,7 +49,12 @@ const MarkdownEditor = ({
       StarterKit,
       Underline,
       Link.configure({
-        openOnClick: false
+        openOnClick: false,
+        HTMLAttributes: {
+          target: '_blank',
+          rel: 'noopener noreferrer'
+        },
+        validate: href => /^https?:\/\//.test(href)
       }),
       TextStyle,
       Color,
@@ -90,6 +95,22 @@ const MarkdownEditor = ({
         return ['s', 'strike', 'del'].includes(tagName)
       },
       replacement: content => `~~${content}~~`
+    })
+
+    // Add rules for links
+    turndownService.addRule('link', {
+      filter: node => {
+        return (
+          node.nodeName.toLowerCase() === 'a' &&
+          (node as HTMLElement).getAttribute('href') !== null
+        )
+      },
+      replacement: (content, node) => {
+        const element = node as HTMLElement
+        const href = element.getAttribute('href')
+        const title = element.title ? ` "${element.title}"` : ''
+        return href ? `[${content}](${href}${title})` : content
+      }
     })
   }, [turndownService])
 
