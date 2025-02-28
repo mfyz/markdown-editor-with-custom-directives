@@ -21,7 +21,7 @@ import '../extensions/TextColorExtension.css'
 import '../extensions/ButtonDirectiveExtension.css'
 
 // Helper function to parse attributes from a string
-function parseAttributes(attrString: string): Record<string, string> {
+export function parseAttributes(attrString: string): Record<string, string> {
   const attrs: Record<string, string> = {}
 
   // Match key=value pairs, handling spaces properly
@@ -93,7 +93,8 @@ marked.use({
   ]
 })
 
-interface MarkdownEditorProps {
+// Define the props for the MarkdownEditor component
+export interface MarkdownEditorProps {
   content: string
   onChange: (markdown: string) => void
   placeholder?: string
@@ -102,6 +103,9 @@ interface MarkdownEditorProps {
   singleLineMode?: boolean
 }
 
+/**
+ * MarkdownEditor component for editing markdown content with custom directives
+ */
 const MarkdownEditor = ({
   content,
   onChange,

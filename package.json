@@ -1,8 +1,14 @@
 {
-  "name": "markdown-editor-with-custom-comp-v2",
-  "private": true,
-  "version": "0.0.0",
+  "name": "@mfyz/markdown-editor-with-color-and-button",
+  "version": "0.1.0",
+  "description": "A React markdown editor with custom color and button directives",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "bash -c 'if lsof -i :5173 > /dev/null 2>&1 || lsof -i :5174 > /dev/null 2>&1 || lsof -i :5175 > /dev/null 2>&1; then echo \"Vite server is already running. Access it in your browser.\"; else vite; fi'",
     "build": "tsc -b && vite build",
@@ -22,13 +28,15 @@
     "@tiptap/starter-kit": "^2.11.5",
     "@types/styled-components": "^5.1.34",
     "marked": "^15.0.7",
-    "react": "^19.0.0",
     "react-color": "^2.19.3",
-    "react-dom": "^19.0.0",
     "react-icons": "^5.5.0",
     "styled-components": "^6.1.15",
     "tiptap": "^1.32.2",
     "turndown": "^7.2.0"
+  },
+  "peerDependencies": {
+    "react": "^18.0.0 || ^19.0.0",
+    "react-dom": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -51,11 +59,28 @@
     "prettier": "^3.5.2",
     "ts-jest": "^29.2.6",
     "typescript": "~5.7.2",
-    "vite": "^6.2.0"
+    "vite": "^6.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx,md,json,css,html}": [
       "prettier --write"
     ]
+  },
+  "keywords": [
+    "react",
+    "markdown",
+    "editor",
+    "tiptap",
+    "color",
+    "button",
+    "directive"
+  ],
+  "author": "mfyz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mfyz/markdown-editor-with-custom-directives"
   }
 }

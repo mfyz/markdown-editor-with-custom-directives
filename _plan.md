@@ -288,29 +288,29 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 - Ensure proper visualization of colored text in the editor
 - Write comprehensive tests for the color directive
 
-**Checkpoint 6.2: Button Directive**
+✅ **Checkpoint 6.2: Button Directive**
 
 - Implement `:button[text](url){style}` directive parsing and rendering
 - Create button styling options, we'll have presets, a grid of examples, that we'll have border radius options: pill style, small rounded, rectangle border options. and bg color options, copy the same color presets we have from the color picker. At the end it will create a combined string like pill-purple for the `style` value.
 - Ensure proper visualization of buttons in the editor view. each style should render the button with the correct styles.
 
-**Checkpoint 6.3: Button Directive**
+✅ **Checkpoint 6.3: Button Directive Testing**
 
 - Write comprehensive tests for the button directive
 
 ### Iteration 7: Convert this package to an npm module we can publish
 
-**Checkpoint 7.1: Create proper exports**
+**Checkpoint 7.1: Create proper exports** ✅
 
-- Create 2 main exports, Editor and Renderer
-- Create Renderer unit tests that cover all the features of custom directives
+- Create 2 main exports, Editor and Renderer ✅
+- Create Renderer unit tests that cover all the features of custom directives ✅
 
-**Checkpoint 7.2: Build**
+**Checkpoint 7.2: Build** ✅
 
-- Create `dist` folder and build the project for esm and es5 targets
-- Rename project to be `@mfyz/markdown-editor-with-color-and-button`
-- Add MIT license
-- Update README with new name and installation and usage instructions
+- Create `dist` folder and build the project for esm and es5 targets ✅
+- Rename project to be `@mfyz/markdown-editor-with-color-and-button` ✅
+- Add MIT license ✅
+- Update README with new name and installation and usage instructions ✅
 
 **Checkpoint 7.3: Publish to npm**
 

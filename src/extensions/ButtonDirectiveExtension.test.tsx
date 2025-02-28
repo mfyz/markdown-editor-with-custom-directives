@@ -16,7 +16,7 @@ const TestEditor = ({ content }: { content: string }) => {
 describe('ButtonDirectiveExtension', () => {
   it('renders without crashing', () => {
     render(
-      <TestEditor content="Test :button[Click me]{url=https://example.com shape=pill color=blue} text" />
+      <TestEditor content="Test ::button[Click me]{url=https://example.com shape=pill color=blue} text" />
     )
     // Just testing that it renders without errors
   })

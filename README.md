@@ -1,71 +1,107 @@
-# React + TypeScript + Vite
+# Markdown Editor with Color and Button Directives
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A React markdown editor with custom directives for colored text and styled buttons.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Full-featured markdown editor with preview
+- Custom directives for colored text and styled buttons
+- Dual-pane layout with live preview
+- Toolbar with formatting options
+- Responsive design
 
-## Expanding the ESLint configuration
+## Installation
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname
-    }
-  }
-})
+```bash
+npm install @mfyz/markdown-editor-with-color-and-button
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Usage
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Editor Component
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules
-  }
-})
+```jsx
+import { MarkdownEditor } from '@mfyz/markdown-editor-with-color-and-button'
+import '@mfyz/markdown-editor-with-color-and-button/dist/styles/index.css'
+
+function App() {
+  const [markdown, setMarkdown] = useState('# Hello World')
+
+  return (
+    <div className="app">
+      <MarkdownEditor
+        content={markdown}
+        onChange={setMarkdown}
+        placeholder="Start writing..."
+        allowSourceView={true}
+      />
+    </div>
+  )
+}
 ```
 
-## Development
+### Renderer Component
 
-This project uses:
+If you only need to render markdown with the custom directives:
 
-- Prettier for code formatting
-- Husky for Git hooks
-- lint-staged for running linters on staged files
+```jsx
+import { MarkdownRenderer } from '@mfyz/markdown-editor-with-color-and-button'
+import '@mfyz/markdown-editor-with-color-and-button/dist/styles/index.css'
 
-The pre-commit hook will:
+function MarkdownDisplay({ content }) {
+  return (
+    <div className="markdown-display">
+      <MarkdownRenderer content={content} />
+    </div>
+  )
+}
+```
 
-1. Automatically run Prettier on staged files
-2. Run all unit tests to ensure code quality
+## Custom Directives
 
-The lint-staged configuration is set up to format JavaScript, TypeScript, Markdown, JSON, CSS, and HTML files.
+### Color Directive
 
-Note: You can test Husky by running `npx husky test` in your terminal.
+Format: `:color[text]{#hexcolor}`
+
+Example:
+
+```
+This is :color[colored text]{#ff0000}.
+```
+
+### Button Directive
+
+Format: `:button[button text]{url="https://example.com" shape="pill" color="blue"}`
+
+Available shapes: `pill`, `rounded`, `rect`
+Available colors: `purple`, `blue`, `green`, `red`, `yellow`, `gray`, `black`
+
+Example:
+
+```
+Click this :button[Button]{url="https://example.com" shape="pill" color="blue"}.
+```
+
+## API Reference
+
+### MarkdownEditor Props
+
+| Prop            | Type     | Description                                                           |
+| --------------- | -------- | --------------------------------------------------------------------- |
+| content         | string   | The markdown content                                                  |
+| onChange        | function | Callback when content changes                                         |
+| placeholder     | string   | Placeholder text when editor is empty (default: 'Write something...') |
+| className       | string   | Additional CSS class                                                  |
+| allowSourceView | boolean  | Whether to allow switching to source view (default: true)             |
+| singleLineMode  | boolean  | Whether to restrict editor to a single line (default: false)          |
+
+### MarkdownRenderer Props
+
+| Prop      | Type   | Description                    |
+| --------- | ------ | ------------------------------ |
+| content   | string | The markdown content to render |
+| className | string | Additional CSS class           |
+
+## License
+
+MIT
