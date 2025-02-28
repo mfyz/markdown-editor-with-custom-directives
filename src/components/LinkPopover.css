@@ -1,6 +1,6 @@
 .link-popover {
   position: absolute;
-  z-index: 99999; /* Extremely high z-index to appear above all other elements */
+  z-index: 999999; /* Even higher z-index to appear above toolbar */
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 6px;

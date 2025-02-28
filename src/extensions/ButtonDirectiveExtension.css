@@ -1,0 +1,83 @@
+.button-directive {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  cursor: pointer;
+  text-decoration: none;
+  padding: 2px 10px;
+  font-weight: 500;
+  text-align: center;
+  border: 1px solid transparent;
+  margin: 0 1px;
+  user-select: none;
+  line-height: inherit;
+  transition: all 0.2s ease;
+  pointer-events: all;
+  font-size: inherit;
+  vertical-align: baseline;
+}
+
+.button-directive:hover {
+  filter: brightness(1.1);
+  text-decoration: none;
+}
+
+.button-directive:active {
+  filter: brightness(0.9);
+}
+
+.directive-hidden {
+  opacity: 0;
+  height: 0;
+  width: 0;
+  display: inline-block;
+  white-space: nowrap;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Shape styles */
+.button-directive.shape-pill {
+  border-radius: 9999px;
+}
+
+.button-directive.shape-rect {
+  border-radius: 4px;
+}
+
+/* Color variants */
+.button-directive.color-blue {
+  background-color: #3b82f6;
+  color: white;
+}
+
+.button-directive.color-red {
+  background-color: #ef4444;
+  color: white;
+}
+
+.button-directive.color-green {
+  background-color: #22c55e;
+  color: white;
+}
+
+.button-directive.color-purple {
+  background-color: #8b5cf6;
+  color: white;
+}
+
+.button-directive.color-gray {
+  background-color: #6b7280;
+  color: white;
+}
+
+.directive-syntax {
+  display: none;
+}
+
+/* Ensure button directives work in single-line mode */
+.single-line-mode .button-directive {
+  white-space: nowrap;
+  display: inline-block;
+}

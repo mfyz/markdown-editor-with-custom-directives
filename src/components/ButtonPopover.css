@@ -1,0 +1,139 @@
+.button-popover {
+  position: absolute;
+  z-index: 999999; /* Even higher z-index to appear above toolbar */
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  min-width: 200px;
+  max-width: 300px;
+  transform: translateX(-50%);
+  animation: popoverFadeIn 0.2s ease-out;
+  margin-bottom: 8px;
+}
+
+.button-popover::before,
+.button-popover::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.button-popover::before {
+  bottom: -6px;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #e0e0e0;
+}
+
+.button-popover::after {
+  bottom: -4px;
+  border-left: 4px solid transparent;
+  border-right: 4px solid transparent;
+  border-top: 4px solid white;
+}
+
+.button-popover-content {
+  padding: 8px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: relative;
+  background: white;
+  border-radius: 6px;
+  z-index: 1;
+}
+
+.button-url-wrapper {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  padding: 2px;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.button-icon {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+  color: #0366d6;
+}
+
+.button-url {
+  font-size: 13px;
+  color: #0366d6;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px;
+}
+
+.open-icon {
+  flex-shrink: 0;
+  width: 14px;
+  height: 14px;
+  color: #666;
+}
+
+.button-url-wrapper:hover {
+  background-color: #f0f0f0;
+  text-decoration: none;
+}
+
+.button-url-wrapper:hover .open-icon {
+  color: #0366d6;
+}
+
+.button-actions {
+  display: flex;
+  gap: 4px;
+  margin-left: auto;
+}
+
+.button-actions .action-button {
+  padding: 4px;
+  border: none;
+  background: none;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.button-actions .action-button:hover {
+  background-color: #f0f0f0;
+  color: #000;
+}
+
+/* Tooltip styles */
+.button-actions .action-button[title]:hover::after {
+  content: attr(title);
+  position: absolute;
+  bottom: -24px;
+  right: 0;
+  padding: 4px 8px;
+  background-color: #333;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+@keyframes popoverFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px) translateX(-50%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) translateX(-50%);
+  }
+}

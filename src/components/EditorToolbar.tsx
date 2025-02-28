@@ -9,7 +9,7 @@ import {
   RiStrikethrough,
   RiDoubleQuotesL
 } from 'react-icons/ri'
-import { MdFormatColorText } from 'react-icons/md'
+import { MdFormatColorText, MdSmartButton } from 'react-icons/md'
 import { useState, useCallback } from 'react'
 import LinkModal from './LinkModal'
 
@@ -24,6 +24,7 @@ interface EditorToolbarProps {
   onToggleSourceMode?: () => void
   onShowLinkModal?: () => void
   onShowColorPickerModal?: () => void
+  onShowButtonPickerModal?: () => void
   singleLineMode?: boolean
 }
 
@@ -35,6 +36,7 @@ const EditorToolbar = ({
   onToggleSourceMode = () => {},
   onShowLinkModal = () => {},
   onShowColorPickerModal = () => {},
+  onShowButtonPickerModal = () => {},
   singleLineMode = false
 }: EditorToolbarProps) => {
   const [showLinkModal, setShowLinkModal] = useState(false)
@@ -237,6 +239,15 @@ const EditorToolbar = ({
           disabled={disabled || !canAddColor}
         >
           <MdFormatColorText />
+        </button>
+
+        <button
+          onMouseDown={handleButtonMouseDown}
+          onClick={onShowButtonPickerModal}
+          title="Add Button"
+          disabled={disabled}
+        >
+          <MdSmartButton />
         </button>
       </div>
 

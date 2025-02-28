@@ -2,29 +2,28 @@ import { useState } from 'react'
 import './App.css'
 import MarkdownEditor from './components/MarkdownEditor'
 
-function App() {
-  // State for the main editor
-  const [markdown, setMarkdown] = useState(`# Markdown Kitchen Sink Example
+const exampleSingleLine =
+  'This is a :color[single line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rect color=red} '
 
-## Basic Formatting
+const exampleFull = `:button[Primary Button]{url=https://example.com shape=pill color=blue} and [link the](https://sanane.com) top
 
-This is a paragraph with **bold text**, *italic text*, and ~~strikethrough text~~. You can also use __bold__ and _italic_ syntax.
+# Markdown Editor Example
 
-Lorem ipsum [my link](https://www.google.com) dolor sit amet, consectetur adipiscing elit.
+## Custom Button Examples
 
-[Another](https://www.super-long-link-that-will-overflow-the-popover.com)
+Here are some button examples with different styles:
 
-## Custom Directives
+:button[Primary Button]{url=https://example.com shape=pill color=blue}
 
-### Text Color
+:button[Rectangle Green]{url=https://example.com/green shape=rect color=green}
 
-You can add colored text using the :color[text]{#color} directive:
+:button[Rounded Purple]{url=https://example.com/purple shape=rounded color=purple}
 
-:color[This text is red]{#ff0000}
+:button[Rectangle Red]{url=https://example.com/red shape=rect color=red}
 
-:color[This text is blue]{#0000ff}
+## Custom Color Examples
 
-:color[This text is green]{#00ff00}
+This text has :color[custom colors]{#ff0000} that can be applied to any :color[part of the text]{#3b82f6}.
 
 ## Headings
 
@@ -93,12 +92,15 @@ function example() {
 - [x] Completed task
 - [ ] Incomplete task
 - [ ] Another task
-`)
+`
 
+function App() {
   // State for the single-line editor
-  const [singleLineMarkdown, setSingleLineMarkdown] = useState(
-    'This is a :color[single line]{#ff0000} editor with **bold** and *italic* text and a [link](https://example.com)'
-  )
+  const [singleLineMarkdown, setSingleLineMarkdown] =
+    useState(exampleSingleLine)
+
+  // State for the main editor
+  const [markdown, setMarkdown] = useState(exampleFull)
 
   return (
     <div className="app-container">
