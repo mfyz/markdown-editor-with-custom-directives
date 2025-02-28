@@ -21,7 +21,7 @@ const LinkPopover = ({ editor, url, onEdit, onClose }: LinkPopoverProps) => {
   }
 
   return (
-    <div className="link-popover">
+    <div className="link-popover-container">
       <div className="link-popover-content">
         <a
           href={url}
