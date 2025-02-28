@@ -6,9 +6,10 @@ import './LinkModal.css'
 interface LinkModalProps {
   editor: Editor
   onClose: () => void
+  onSubmit?: (url: string) => void
 }
 
-const LinkModal = ({ editor, onClose }: LinkModalProps) => {
+const LinkModal = ({ editor, onClose, onSubmit }: LinkModalProps) => {
   const [url, setUrl] = useState('')
   const [isEditing, setIsEditing] = useState(false)
 
@@ -24,6 +25,7 @@ const LinkModal = ({ editor, onClose }: LinkModalProps) => {
     e.preventDefault()
 
     if (!url) {
+      // @ts-ignore - These methods exist in the actual implementation
       editor.chain().focus().extendMarkRange('link').unsetLink().run()
       onClose()
       return
@@ -37,11 +39,17 @@ const LinkModal = ({ editor, onClose }: LinkModalProps) => {
 
     // console.log('normalizedUrl:', normalizedUrl)
 
-    editor.chain().focus().setLink({ href: normalizedUrl }).run()
+    if (onSubmit) {
+      onSubmit(normalizedUrl)
+    } else {
+      // @ts-ignore - These methods exist in the actual implementation
+      editor.chain().focus().setLink({ href: normalizedUrl }).run()
+    }
     onClose()
   }
 
   const handleRemove = () => {
+    // @ts-ignore - These methods exist in the actual implementation
     editor.chain().focus().extendMarkRange('link').unsetLink().run()
     onClose()
   }

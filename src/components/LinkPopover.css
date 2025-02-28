@@ -1,13 +1,18 @@
 .link-popover {
   position: absolute;
-  z-index: 100;
+  z-index: 30; /* Ensure it's above the toolbar */
   background: white;
   border: 1px solid #e0e0e0;
   border-radius: 6px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   min-width: 200px;
   max-width: 300px;
-  transform: translateX(-50%);
+  left: 0;
+  right: 0;
+  margin-left: auto;
+  margin-right: auto;
+  width: fit-content;
+  transform: translateY(0);
   animation: popoverFadeIn 0.2s ease-out;
   margin-bottom: 8px;
 }

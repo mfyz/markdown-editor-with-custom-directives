@@ -39,6 +39,7 @@ const MarkdownEditor = ({
   })
   const [currentLinkUrl, setCurrentLinkUrl] = useState('')
   const popoverRef = useRef<HTMLDivElement>(null)
+  const [isFocused, setIsFocused] = useState(false)
   const [turndownService] = useState(
     () =>
       new TurndownService({
@@ -87,7 +88,17 @@ const MarkdownEditor = ({
             }
             return false
           }
-        : undefined
+        : undefined,
+      handleDOMEvents: {
+        focus: () => {
+          setIsFocused(true)
+          return false
+        },
+        blur: () => {
+          setIsFocused(false)
+          return false
+        }
+      }
     },
     onUpdate: ({ editor }) => {
       if (updatingFromExternal.current || updatingFromSource.current) {
@@ -205,16 +216,20 @@ const MarkdownEditor = ({
 
   return (
     <div className={`markdown-editor ${className}`}>
-      <div className="editor-toolbar-container">
-        <EditorToolbar
-          editor={editor}
-          disabled={isSourceMode}
-          isSourceMode={isSourceMode}
-          allowSourceView={allowSourceView && !singleLineMode}
-          onToggleSourceMode={toggleSourceMode}
-          onShowLinkModal={() => setShowLinkModal(true)}
-        />
-      </div>
+      {/* Show toolbar always for regular mode, or only when focused for single-line mode */}
+      {(!singleLineMode || (singleLineMode && isFocused)) && (
+        <div className="editor-toolbar-container">
+          <EditorToolbar
+            editor={editor}
+            disabled={isSourceMode}
+            isSourceMode={isSourceMode}
+            allowSourceView={allowSourceView && !singleLineMode}
+            onToggleSourceMode={toggleSourceMode}
+            onShowLinkModal={() => setShowLinkModal(true)}
+            singleLineMode={singleLineMode}
+          />
+        </div>
+      )}
       <div className="editor-content-container">
         {/* Hide source mode in single-line mode */}
         {isSourceMode && allowSourceView && !singleLineMode ? (
@@ -227,11 +242,13 @@ const MarkdownEditor = ({
         ) : (
           <div
             className={`rich-editor-content-wrapper ${singleLineMode ? 'single-line-mode' : ''}`}
+            style={{ position: singleLineMode ? 'relative' : 'static' }}
           >
             <EditorContent editor={editor} />
             {showLinkPopover && editor && (
               <div
                 ref={popoverRef}
+                className="link-popover"
                 style={{
                   position: 'fixed',
                   top: linkPopoverPosition.top,

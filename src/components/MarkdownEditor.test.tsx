@@ -477,5 +477,60 @@ describe('MarkdownEditor', () => {
       )
       expect(editorWrapper).toBeInTheDocument()
     })
+
+    it('shows toolbar only when focused in single-line mode', () => {
+      const onChange = jest.fn()
+      const { container } = render(
+        <MarkdownEditor
+          content="Single line content"
+          onChange={onChange}
+          singleLineMode={true}
+        />
+      )
+
+      // Toolbar should not be visible initially
+      let toolbar = container.querySelector('.editor-toolbar-container')
+      expect(toolbar).not.toBeInTheDocument()
+
+      // Simulate focus on the editor
+      const editor = container.querySelector('.ProseMirror')
+      if (editor) {
+        fireEvent.focus(editor)
+
+        // Toolbar should be visible after focus
+        toolbar = container.querySelector('.editor-toolbar-container')
+        expect(toolbar).toBeInTheDocument()
+
+        // Simulate blur
+        fireEvent.blur(editor)
+
+        // Toolbar should not be visible after blur
+        toolbar = container.querySelector('.editor-toolbar-container')
+        expect(toolbar).not.toBeInTheDocument()
+      }
+    })
+
+    it('passes singleLineMode prop to EditorToolbar', () => {
+      const onChange = jest.fn()
+      const { container } = render(
+        <MarkdownEditor
+          content="Single line content"
+          onChange={onChange}
+          singleLineMode={true}
+        />
+      )
+
+      // Simulate focus to show the toolbar
+      const editor = container.querySelector('.ProseMirror')
+      if (editor) {
+        fireEvent.focus(editor)
+
+        // Check if the single-line-toolbar class is applied to the toolbar
+        const toolbar = container.querySelector(
+          '.editor-toolbar.single-line-toolbar'
+        )
+        expect(toolbar).toBeInTheDocument()
+      }
+    })
   })
 })

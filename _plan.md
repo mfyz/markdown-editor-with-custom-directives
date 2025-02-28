@@ -252,11 +252,11 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ### Iteration 4: Editor Modes and Toolbar Options
 
-**Checkpoint 4.1: Editor Size Variant: SingleLineMode**
+✅ **Checkpoint 4.1: Editor Size Variant: SingleLineMode**
 
 - Update app.tsx to have multiple examples. Start with: single-line editor mode. This mode also should add a new prop singleLineMode which would disable new line inside the editor. This mode also will hide the toggle.
 
-**Checkpoint 4.2: Toolbar Variants**
+✅ **Checkpoint 4.2: Toolbar Variants**
 
 - Implement fixed toolbar option
 - Create floating toolbar that appears on focus
@@ -272,7 +272,7 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 - Ensure consistent behavior across different configurations
 - Write tests for the component API
 
-**Checkpoint 5.2: Demo Page**
+✅ **Checkpoint 5.2: Demo Page**
 
 - Create demo page with three editor instances (minimal, small, large)
 - Add controls to showcase different features
