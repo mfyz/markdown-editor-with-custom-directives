@@ -9,6 +9,10 @@ function App() {
 
 This is a paragraph with **bold text**, *italic text*, and ~~strikethrough text~~. You can also use __bold__ and _italic_ syntax.
 
+Lorem ipsum [my link](https://www.google.com) dolor sit amet, consectetur adipiscing elit.
+
+[Another](https://www.super-long-link-that-will-overflow-the-popover.com)
+
 ## Headings
 
 # Heading 1

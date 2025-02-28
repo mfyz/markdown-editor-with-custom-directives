@@ -6,7 +6,8 @@ import {
   FiUnderline,
   FiList,
   FiCode,
-  FiEye
+  FiEye,
+  FiLink
 } from 'react-icons/fi'
 import {
   RiH1,
@@ -16,6 +17,8 @@ import {
   RiStrikethrough,
   RiDoubleQuotesL
 } from 'react-icons/ri'
+import { useState, useCallback } from 'react'
+import LinkModal from './LinkModal'
 
 interface EditorToolbarProps {
   editor: Editor | null
@@ -23,6 +26,7 @@ interface EditorToolbarProps {
   isSourceMode?: boolean
   allowSourceView?: boolean
   onToggleSourceMode?: () => void
+  onShowLinkModal?: () => void
 }
 
 const EditorToolbar = ({
@@ -30,11 +34,23 @@ const EditorToolbar = ({
   disabled = false,
   isSourceMode = false,
   allowSourceView = true,
-  onToggleSourceMode = () => {}
+  onToggleSourceMode = () => {},
+  onShowLinkModal = () => {}
 }: EditorToolbarProps) => {
+  const [showLinkModal, setShowLinkModal] = useState(false)
+
   if (!editor) {
     return null
   }
+
+  const hasTextSelection = useCallback(() => {
+    if (!editor) return false
+    const { from, to } = editor.state.selection
+    return from !== to
+  }, [editor])
+
+  const isLinkActive = editor.isActive('link')
+  const canAddLink = hasTextSelection() || isLinkActive
 
   return (
     <div className={`editor-toolbar ${disabled ? 'disabled' : ''}`}>
@@ -42,7 +58,7 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleBold().run()}
           className={editor.isActive('bold') ? 'is-active' : ''}
-          title="Bold"
+          title="Bold (⌘B)"
           disabled={disabled}
         >
           <FiBold />
@@ -50,7 +66,7 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleItalic().run()}
           className={editor.isActive('italic') ? 'is-active' : ''}
-          title="Italic"
+          title="Italic (⌘I)"
           disabled={disabled}
         >
           <FiItalic />
@@ -58,7 +74,7 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleUnderline().run()}
           className={editor.isActive('underline') ? 'is-active' : ''}
-          title="Underline"
+          title="Underline (⌘U)"
           disabled={disabled}
         >
           <FiUnderline />
@@ -66,7 +82,7 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleStrike().run()}
           className={editor.isActive('strike') ? 'is-active' : ''}
-          title="Strike"
+          title="Strikethrough"
           disabled={disabled}
         >
           <RiStrikethrough />
@@ -120,7 +136,7 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleOrderedList().run()}
           className={editor.isActive('orderedList') ? 'is-active' : ''}
-          title="Ordered List"
+          title="Numbered List"
           disabled={disabled}
         >
           <RiListOrdered />
@@ -137,10 +153,25 @@ const EditorToolbar = ({
         <button
           onClick={() => editor.chain().focus().toggleBlockquote().run()}
           className={editor.isActive('blockquote') ? 'is-active' : ''}
-          title="Blockquote"
+          title="Quote"
           disabled={disabled}
         >
           <RiDoubleQuotesL />
+        </button>
+        <div className="divider" />
+        <button
+          onClick={onShowLinkModal}
+          className={isLinkActive ? 'is-active' : ''}
+          title={
+            canAddLink
+              ? isLinkActive
+                ? 'Edit Link'
+                : 'Add Link'
+              : 'Add link: Select text first'
+          }
+          disabled={disabled || !canAddLink}
+        >
+          <FiLink />
         </button>
       </div>
 
@@ -150,12 +181,18 @@ const EditorToolbar = ({
             onClick={onToggleSourceMode}
             className={`source-toggle ${isSourceMode ? 'is-active' : ''}`}
             title={
-              isSourceMode ? 'Switch to WYSIWYG mode' : 'Switch to source mode'
+              isSourceMode
+                ? 'Switch to Visual Editor mode'
+                : 'Switch to Markdown mode'
             }
           >
             <FiEye />
           </button>
         </div>
+      )}
+
+      {showLinkModal && (
+        <LinkModal editor={editor} onClose={() => setShowLinkModal(false)} />
       )}
     </div>
   )

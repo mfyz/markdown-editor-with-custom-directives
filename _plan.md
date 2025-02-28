@@ -220,14 +220,14 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ### Iteration 2: Testing Infrastructure
 
-**Checkpoint 2.1: Unit Testing Setup**
+✅ **Checkpoint 2.1: Unit Testing Setup**
 
 - Set up Jest configuration for unit tests
 - Create test utilities and helpers
 - Implement initial unit tests for core functionality
 - Set up test coverage reporting
 
-**Checkpoint 2.2: Component and E2E Testing Setup**
+✅ **Checkpoint 2.2: Component and E2E Testing Setup**
 
 - Set up React Testing Library for component tests
 - Configure Playwright for end-to-end tests
@@ -236,14 +236,14 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ### Iteration 3: Standard Formatting Features
 
-**Checkpoint 3.1: Text Styling**
+✅ **Checkpoint 3.1: Text Styling**
 
 - Implement bold, italic, underline, strikethrough functionality
 - Create toolbar with styling buttons
 - Ensure proper markdown generation
 - Write comprehensive tests for styling features
 
-**Checkpoint 3.2: Link Functionality**
+✅ **Checkpoint 3.2: Link Functionality**
 
 - Implement link creation
 - Add link editing popover
@@ -252,12 +252,9 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ### Iteration 4: Editor Modes and Toolbar Options
 
-**Checkpoint 4.1: Editor Size Variants**
+**Checkpoint 4.1: Editor Size Variant: SingleLineMode**
 
-- Implement single-line/minimal editor mode
-- Create small multi-line editor mode
-- Develop large editor mode
-- Write tests for different editor modes
+- Update app.tsx to have multiple examples. Start with: single-line editor mode. This mode also should add a new prop singleLineMode which would disable new line inside the editor. This mode also will hide the toggle.
 
 **Checkpoint 4.2: Toolbar Variants**
 

@@ -38,6 +38,12 @@ jest.mock('@tiptap/react', () => {
         })
       })
     }),
+    state: {
+      selection: {
+        from: 0,
+        to: 0
+      }
+    },
     isActive: jest.fn().mockReturnValue(false),
     getHTML: jest.fn().mockImplementation(() => {
       // Return the stored HTML for the current test case
@@ -97,7 +103,7 @@ describe('MarkdownEditor', () => {
     )
 
     // Find the source toggle button (eye icon)
-    const sourceToggleButton = screen.getByTitle('Switch to source mode')
+    const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
 
     // Initially in WYSIWYG mode
     expect(screen.getByTestId('editor-content')).toBeInTheDocument()
@@ -127,7 +133,9 @@ describe('MarkdownEditor', () => {
     )
 
     // Source toggle button should not be present
-    expect(screen.queryByTitle('Switch to source mode')).not.toBeInTheDocument()
+    expect(
+      screen.queryByTitle('Switch to Markdown mode')
+    ).not.toBeInTheDocument()
   })
 
   describe('Toolbar buttons functionality', () => {
@@ -135,10 +143,10 @@ describe('MarkdownEditor', () => {
       render(<MarkdownEditor content="" onChange={() => {}} />)
 
       // Basic formatting
-      expect(screen.getByTitle('Bold')).toBeInTheDocument()
-      expect(screen.getByTitle('Italic')).toBeInTheDocument()
-      expect(screen.getByTitle('Underline')).toBeInTheDocument()
-      expect(screen.getByTitle('Strike')).toBeInTheDocument()
+      expect(screen.getByTitle('Bold (⌘B)')).toBeInTheDocument()
+      expect(screen.getByTitle('Italic (⌘I)')).toBeInTheDocument()
+      expect(screen.getByTitle('Underline (⌘U)')).toBeInTheDocument()
+      expect(screen.getByTitle('Strikethrough')).toBeInTheDocument()
 
       // Headings
       expect(screen.getByTitle('Heading 1')).toBeInTheDocument()
@@ -147,22 +155,22 @@ describe('MarkdownEditor', () => {
 
       // Lists
       expect(screen.getByTitle('Bullet List')).toBeInTheDocument()
-      expect(screen.getByTitle('Ordered List')).toBeInTheDocument()
+      expect(screen.getByTitle('Numbered List')).toBeInTheDocument()
 
       // Other formatting
       expect(screen.getByTitle('Code Block')).toBeInTheDocument()
-      expect(screen.getByTitle('Blockquote')).toBeInTheDocument()
+      expect(screen.getByTitle('Quote')).toBeInTheDocument()
     })
 
     it('disables toolbar buttons in source mode', () => {
       render(<MarkdownEditor content="" onChange={() => {}} />)
 
       // Initially buttons are enabled
-      const boldButton = screen.getByTitle('Bold')
+      const boldButton = screen.getByTitle('Bold (⌘B)')
       expect(boldButton).not.toBeDisabled()
 
       // Switch to source mode
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       // Now buttons should be disabled
@@ -184,7 +192,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(
@@ -238,7 +246,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(
@@ -280,7 +288,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(
@@ -321,7 +329,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(
@@ -363,7 +371,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(
@@ -405,7 +413,7 @@ describe('MarkdownEditor', () => {
       )
 
       // Switch to source mode to see the markdown
-      const sourceToggleButton = screen.getByTitle('Switch to source mode')
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
       fireEvent.click(sourceToggleButton)
 
       const textarea = container.querySelector(

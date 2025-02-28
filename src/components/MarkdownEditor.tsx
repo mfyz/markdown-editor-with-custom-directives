@@ -10,6 +10,8 @@ import TurndownService from 'turndown'
 import { marked } from 'marked'
 import './MarkdownEditor.css'
 import EditorToolbar from './EditorToolbar'
+import LinkModal from './LinkModal'
+import LinkPopover from './LinkPopover'
 
 interface MarkdownEditorProps {
   content: string
@@ -27,6 +29,14 @@ const MarkdownEditor = ({
   allowSourceView = true
 }: MarkdownEditorProps) => {
   const [isSourceMode, setIsSourceMode] = useState(false)
+  const [showLinkModal, setShowLinkModal] = useState(false)
+  const [showLinkPopover, setShowLinkPopover] = useState(false)
+  const [linkPopoverPosition, setLinkPopoverPosition] = useState({
+    top: 0,
+    left: 0
+  })
+  const [currentLinkUrl, setCurrentLinkUrl] = useState('')
+  const popoverRef = useRef<HTMLDivElement>(null)
   const [turndownService] = useState(
     () =>
       new TurndownService({
@@ -71,6 +81,29 @@ const MarkdownEditor = ({
       const html = editor.getHTML()
       const md = turndownService.turndown(html)
       onChange(md)
+    },
+    onSelectionUpdate: ({ editor }) => {
+      // Check if selection is within a link
+      const linkAttrs = editor.getAttributes('link')
+      if (linkAttrs.href) {
+        setCurrentLinkUrl(linkAttrs.href)
+        const { from } = editor.state.selection
+        const pos = editor.view.coordsAtPos(from)
+        const { to } = editor.state.selection
+        const endPos = editor.view.coordsAtPos(to)
+
+        // Calculate the center position and adjust height to be above the text
+        const centerX = pos.left + (endPos.left - pos.left) / 2
+        const topPosition = pos.top - 48 // Move up by the height of the popover plus some padding
+
+        setLinkPopoverPosition({
+          top: topPosition,
+          left: centerX
+        })
+        setShowLinkPopover(true)
+      } else {
+        setShowLinkPopover(false)
+      }
     },
     editorProps: {
       attributes: {
@@ -141,6 +174,23 @@ const MarkdownEditor = ({
     setIsSourceMode(!isSourceMode)
   }
 
+  // Handle click outside popover
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        popoverRef.current &&
+        !popoverRef.current.contains(event.target as Node)
+      ) {
+        setShowLinkPopover(false)
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [])
+
   return (
     <div className={`markdown-editor ${className}`}>
       <div className="editor-toolbar-container">
@@ -150,6 +200,7 @@ const MarkdownEditor = ({
           isSourceMode={isSourceMode}
           allowSourceView={allowSourceView}
           onToggleSourceMode={toggleSourceMode}
+          onShowLinkModal={() => setShowLinkModal(true)}
         />
       </div>
       <div className="editor-content-container">
@@ -163,9 +214,32 @@ const MarkdownEditor = ({
         ) : (
           <div className="rich-editor-content-wrapper">
             <EditorContent editor={editor} />
+            {showLinkPopover && editor && (
+              <div
+                ref={popoverRef}
+                style={{
+                  position: 'fixed',
+                  top: linkPopoverPosition.top,
+                  left: linkPopoverPosition.left
+                }}
+              >
+                <LinkPopover
+                  editor={editor}
+                  url={currentLinkUrl}
+                  onEdit={() => {
+                    setShowLinkModal(true)
+                    setShowLinkPopover(false)
+                  }}
+                  onClose={() => setShowLinkPopover(false)}
+                />
+              </div>
+            )}
           </div>
         )}
       </div>
+      {showLinkModal && editor && (
+        <LinkModal editor={editor} onClose={() => setShowLinkModal(false)} />
+      )}
     </div>
   )
 }
