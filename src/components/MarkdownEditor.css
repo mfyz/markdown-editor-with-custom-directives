@@ -132,11 +132,10 @@
 
 .markdown-editor-content a {
   color: #0366d6;
-  text-decoration: none;
-}
 
-.markdown-editor-content a:hover {
-  text-decoration: underline;
+  &:not(.button-directive) {
+    text-decoration: underline;
+  }
 }
 
 .markdown-editor-content table {
@@ -194,10 +193,9 @@
 .editor-toolbar.single-line-toolbar {
   position: absolute;
   top: -38px; /* Position it directly above the input */
-  left: 0;
-  right: 0;
+  left: -1px;
+  right: -1px;
   z-index: 20;
-  background-color: white;
   border: 1px solid #e0e0e0;
   border-radius: 4px 4px 0 0; /* Rounded corners only on top */
   box-shadow: none;

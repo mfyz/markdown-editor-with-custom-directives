@@ -304,3 +304,9 @@
   width: 100%;
   box-sizing: border-box;
 }
+
+.error-message {
+  color: #e53935;
+  font-size: 0.8rem;
+  margin-top: 4px;
+}

@@ -42,12 +42,11 @@ const ButtonPickerModal = ({
   isEditMode = false,
   buttonPosition
 }: ButtonPickerModalProps) => {
-  const [buttonText, setButtonText] = useState(initialText)
-  const [url, setUrl] = useState(initialUrl)
+  const [buttonText, setButtonText] = useState(initialText || '')
+  const [url, setUrl] = useState(initialUrl || '')
   const [selectedShape, setSelectedShape] = useState(initialShape || 'pill')
   const [selectedColor, setSelectedColor] = useState(initialColor || 'blue')
-
-  // Refs for input fields
+  const [urlError, setUrlError] = useState('')
   const buttonTextInputRef = useRef<HTMLInputElement>(null)
   const urlInputRef = useRef<HTMLInputElement>(null)
 
@@ -71,6 +70,18 @@ const ButtonPickerModal = ({
       }
       return
     }
+
+    // Validate URL
+    if (!url.trim()) {
+      setUrlError('URL cannot be empty')
+      if (urlInputRef.current) {
+        urlInputRef.current.focus()
+      }
+      return
+    }
+
+    // Clear any previous errors
+    setUrlError('')
 
     // Create the button directive
     const buttonDirective = `<a href="${url}" class="button-directive shape-${selectedShape} color-${selectedColor}">${buttonText}</a>`
@@ -111,6 +122,14 @@ const ButtonPickerModal = ({
     }
 
     onClose()
+  }
+
+  const handleUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setUrl(e.target.value)
+    // Clear error when user starts typing
+    if (e.target.value.trim() && urlError) {
+      setUrlError('')
+    }
   }
 
   const handleBackdropClick = (e: React.MouseEvent) => {
@@ -155,11 +174,12 @@ const ButtonPickerModal = ({
               type="text"
               id="buttonUrl"
               value={url}
-              onChange={e => setUrl(e.target.value)}
+              onChange={handleUrlChange}
               placeholder="https://example.com"
               className="color-text-input"
               ref={urlInputRef}
             />
+            {urlError && <div className="error-message">{urlError}</div>}
           </div>
 
           <div className="form-group">

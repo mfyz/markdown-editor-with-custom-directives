@@ -154,4 +154,27 @@ describe('ButtonPickerModal', () => {
     expect(mockEditor.run).toHaveBeenCalled()
     expect(onCloseMock).toHaveBeenCalled()
   })
+
+  it('validates URL is not empty', () => {
+    render(
+      <ButtonPickerModal editor={mockEditor as any} onClose={onCloseMock} />
+    )
+
+    // Fill in the form with empty URL
+    fireEvent.change(screen.getByLabelText('Button Text'), {
+      target: { value: 'New Button' }
+    })
+    fireEvent.change(screen.getByLabelText('URL'), {
+      target: { value: '' }
+    })
+
+    // Click the Apply button
+    fireEvent.click(screen.getByText('Apply'))
+
+    // Check that error message is displayed
+    expect(screen.getByText('URL cannot be empty')).toBeInTheDocument()
+
+    // Check that onClose was not called
+    expect(onCloseMock).not.toHaveBeenCalled()
+  })
 })
