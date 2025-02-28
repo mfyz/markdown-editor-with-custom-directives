@@ -19,6 +19,7 @@ interface MarkdownEditorProps {
   placeholder?: string
   className?: string
   allowSourceView?: boolean
+  singleLineMode?: boolean
 }
 
 const MarkdownEditor = ({
@@ -26,7 +27,8 @@ const MarkdownEditor = ({
   onChange,
   placeholder = 'Write something...',
   className = '',
-  allowSourceView = true
+  allowSourceView = true,
+  singleLineMode = false
 }: MarkdownEditorProps) => {
   const [isSourceMode, setIsSourceMode] = useState(false)
   const [showLinkModal, setShowLinkModal] = useState(false)
@@ -71,6 +73,22 @@ const MarkdownEditor = ({
       Strike
     ],
     content: initialHtml,
+    editable: true,
+    editorProps: {
+      attributes: {
+        class: 'markdown-editor-content',
+        placeholder
+      },
+      handleKeyDown: singleLineMode
+        ? (_view, event) => {
+            // Prevent Enter key in single-line mode
+            if (event.key === 'Enter') {
+              return true // Returning true prevents the default behavior
+            }
+            return false
+          }
+        : undefined
+    },
     onUpdate: ({ editor }) => {
       if (updatingFromExternal.current || updatingFromSource.current) {
         updatingFromExternal.current = false
@@ -103,12 +121,6 @@ const MarkdownEditor = ({
         setShowLinkPopover(true)
       } else {
         setShowLinkPopover(false)
-      }
-    },
-    editorProps: {
-      attributes: {
-        class: 'markdown-editor-content',
-        placeholder
       }
     }
   })
@@ -198,13 +210,14 @@ const MarkdownEditor = ({
           editor={editor}
           disabled={isSourceMode}
           isSourceMode={isSourceMode}
-          allowSourceView={allowSourceView}
+          allowSourceView={allowSourceView && !singleLineMode}
           onToggleSourceMode={toggleSourceMode}
           onShowLinkModal={() => setShowLinkModal(true)}
         />
       </div>
       <div className="editor-content-container">
-        {isSourceMode && allowSourceView ? (
+        {/* Hide source mode in single-line mode */}
+        {isSourceMode && allowSourceView && !singleLineMode ? (
           <textarea
             className="markdown-source"
             value={content}
@@ -212,7 +225,9 @@ const MarkdownEditor = ({
             placeholder={placeholder}
           />
         ) : (
-          <div className="rich-editor-content-wrapper">
+          <div
+            className={`rich-editor-content-wrapper ${singleLineMode ? 'single-line-mode' : ''}`}
+          >
             <EditorContent editor={editor} />
             {showLinkPopover && editor && (
               <div

@@ -444,4 +444,38 @@ describe('MarkdownEditor', () => {
       )
     })
   })
+
+  describe('SingleLineMode', () => {
+    it('hides source view toggle in single-line mode', () => {
+      const onChange = jest.fn()
+      render(
+        <MarkdownEditor
+          content="Single line content"
+          onChange={onChange}
+          singleLineMode={true}
+        />
+      )
+
+      // Source view toggle should not be visible
+      const sourceToggle = screen.queryByTitle('Switch to Markdown mode')
+      expect(sourceToggle).not.toBeInTheDocument()
+    })
+
+    it('applies single-line-mode class in single-line mode', () => {
+      const onChange = jest.fn()
+      const { container } = render(
+        <MarkdownEditor
+          content="Single line content"
+          onChange={onChange}
+          singleLineMode={true}
+        />
+      )
+
+      // Check if the single-line-mode class is applied
+      const editorWrapper = container.querySelector(
+        '.rich-editor-content-wrapper.single-line-mode'
+      )
+      expect(editorWrapper).toBeInTheDocument()
+    })
+  })
 })

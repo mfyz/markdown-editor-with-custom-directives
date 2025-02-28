@@ -163,6 +163,23 @@
   margin: 1rem 0;
 }
 
+/* Single-line mode styles */
+.rich-editor-content-wrapper.single-line-mode {
+  max-height: 56px;
+  overflow-y: hidden;
+}
+
+.rich-editor-content-wrapper.single-line-mode .ProseMirror {
+  white-space: nowrap;
+  overflow-x: auto;
+  padding: 12px 16px;
+}
+
+.rich-editor-content-wrapper.single-line-mode .ProseMirror p {
+  display: inline;
+  margin: 0;
+}
+
 /* Placeholder styling */
 .markdown-editor-content p.is-editor-empty:first-child::before {
   content: attr(data-placeholder);

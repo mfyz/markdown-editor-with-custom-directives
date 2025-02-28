@@ -3,6 +3,7 @@ import './App.css'
 import MarkdownEditor from './components/MarkdownEditor'
 
 function App() {
+  // State for the main editor
   const [markdown, setMarkdown] = useState(`# Markdown Kitchen Sink Example
 
 ## Basic Formatting
@@ -49,59 +50,86 @@ Lorem ipsum [my link](https://www.google.com) dolor sit amet, consectetur adipis
 ## Blockquotes
 
 > This is a blockquote.
-> 
 > It can span multiple lines.
 >
-> > And can be nested.
+> And have multiple paragraphs.
 
 ## Code
 
 Inline \`code\` can be added with backticks.
 
 \`\`\`javascript
-// Code blocks can include syntax highlighting
-function helloWorld() {
+// Code blocks can be added with triple backticks
+function example() {
   console.log('Hello, world!');
 }
 \`\`\`
 
-## Horizontal Rule
+## Horizontal Rules
 
 ---
+
+## Tables
+
+| Header 1 | Header 2 | Header 3 |
+|----------|----------|----------|
+| Cell 1   | Cell 2   | Cell 3   |
+| Cell 4   | Cell 5   | Cell 6   |
 
 ## Task Lists
 
 - [x] Completed task
 - [ ] Incomplete task
-- [ ] Another incomplete task
+- [ ] Another task
+`)
 
-## Long Paragraph for Scrolling
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.`)
-
-  const handleMarkdownChange = (newMarkdown: string) => {
-    setMarkdown(newMarkdown)
-  }
+  // State for the single-line editor
+  const [singleLineMarkdown, setSingleLineMarkdown] = useState(
+    'This is a single line editor with **bold** and *italic* text and a [link](https://example.com).'
+  )
 
   return (
     <div className="app-container">
-      <header className="app-header">
-        <h1>Markdown Editor</h1>
-      </header>
-      <main className="app-main">
+      <h1>Markdown Editor Examples</h1>
+
+      <section className="example-section">
+        <h2>Single-Line Mode</h2>
+        <p className="example-description">
+          A compact editor for single-line content like titles, descriptions, or
+          short comments.
+        </p>
+        <div className="editor-container single-line-container">
+          <MarkdownEditor
+            content={singleLineMarkdown}
+            onChange={setSingleLineMarkdown}
+            placeholder="Enter a single line of text..."
+            singleLineMode={true}
+          />
+        </div>
+        <div className="output-preview">
+          <h3>Output:</h3>
+          <pre>{singleLineMarkdown}</pre>
+        </div>
+      </section>
+
+      <section className="example-section">
+        <h2>Full-Featured Editor</h2>
+        <p className="example-description">
+          A complete markdown editor with all formatting options and source view
+          toggle.
+        </p>
         <div className="editor-container">
           <MarkdownEditor
             content={markdown}
-            onChange={handleMarkdownChange}
-            placeholder="Start writing..."
-            allowSourceView={true}
+            onChange={setMarkdown}
+            placeholder="Write something..."
           />
         </div>
-      </main>
+        <div className="output-preview">
+          <h3>Output:</h3>
+          <pre className="full-featured-output">{markdown}</pre>
+        </div>
+      </section>
     </div>
   )
 }
