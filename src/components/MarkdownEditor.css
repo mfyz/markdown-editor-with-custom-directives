@@ -23,7 +23,6 @@
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  border-top: 1px solid #eee;
 }
 
 .rich-editor-content-wrapper {
@@ -168,7 +167,6 @@
   max-height: 56px;
   overflow-y: hidden;
   border-radius: 0 0 4px 4px;
-  border-top: 1px solid #e0e0e0;
 }
 
 .rich-editor-content-wrapper.single-line-mode .ProseMirror {
@@ -185,13 +183,12 @@
 /* Single-line toolbar styles */
 .editor-toolbar.single-line-toolbar {
   position: absolute;
-  top: -41px; /* Position it directly above the input */
+  top: -38px; /* Position it directly above the input */
   left: 0;
   right: 0;
   z-index: 20;
   background-color: white;
   border: 1px solid #e0e0e0;
-  border-bottom: none; /* Remove bottom border to connect with input */
   border-radius: 4px 4px 0 0; /* Rounded corners only on top */
   box-shadow: none;
   padding: 4px;
