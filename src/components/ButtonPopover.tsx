@@ -9,6 +9,9 @@ interface ButtonPopoverProps {
     url: string
     shape: string
     color: string
+    text: string
+    from: number
+    to: number
   }
   onEdit: () => void
   onClose: () => void
@@ -23,20 +26,34 @@ const ButtonPopover = ({
   const { url } = data
 
   const handleDelete = () => {
-    // Find the button node and delete it
+    // Find the link node, extract its text, and replace it with plain text
     const { state } = editor
     const { from, to } = state.selection
+
+    // Find all nodes between the selection
     state.doc.nodesBetween(from, to, (node, pos) => {
-      if (node.type.name === 'buttonDirective') {
+      if (
+        node.type.name === 'text' &&
+        node.marks.some(mark => mark.type.name === 'link')
+      ) {
+        // This is a link (text with link mark)
+        const buttonText = node.text || ''
+        const markFrom = pos
+        const markTo = pos + node.nodeSize
+
+        // Replace the link with plain text
         editor
           .chain()
           .focus()
-          .deleteRange({ from: pos, to: pos + node.nodeSize })
+          .deleteRange({ from: markFrom, to: markTo })
+          .insertContent(buttonText)
           .run()
-        onClose()
+
         return false
       }
     })
+
+    onClose()
   }
 
   const handleOpen = (e: React.MouseEvent) => {

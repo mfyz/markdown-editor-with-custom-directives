@@ -16,16 +16,27 @@ const ButtonComponent: React.FC<NodeViewProps> = props => {
       e.preventDefault()
       e.stopPropagation()
 
-      // Select the button node
+      // Get the exact position of this button node
       const pos = getPos()
+
+      // Select the button node
       editor.commands.setNodeSelection(pos)
 
-      // Show button popover
+      // Show button popover with exact position information
       const event = new CustomEvent('button-selected', {
         detail: {
           node,
           pos,
-          attrs: { url, shape, color }
+          attrs: {
+            url,
+            shape,
+            color,
+            text
+          },
+          nodePosition: {
+            from: pos,
+            to: pos + node.nodeSize
+          }
         }
       })
       window.dispatchEvent(event)
@@ -35,7 +46,7 @@ const ButtonComponent: React.FC<NodeViewProps> = props => {
 
     button.addEventListener('click', handleClick)
     return () => button.removeEventListener('click', handleClick)
-  }, [editor, getPos, node, url, shape, color])
+  }, [editor, getPos, node, url, shape, color, text])
 
   return (
     <a

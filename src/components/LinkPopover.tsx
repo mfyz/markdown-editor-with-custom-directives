@@ -11,7 +11,33 @@ interface LinkPopoverProps {
 
 const LinkPopover = ({ editor, url, onEdit, onClose }: LinkPopoverProps) => {
   const handleDelete = () => {
-    editor.chain().focus().extendMarkRange('link').unsetLink().run()
+    // Find the link node, extract its text, and replace it with plain text
+    const { state } = editor
+    const { from, to } = state.selection
+
+    // Find all nodes between the selection
+    state.doc.nodesBetween(from, to, (node, pos) => {
+      if (
+        node.type.name === 'text' &&
+        node.marks.some(mark => mark.type.name === 'link')
+      ) {
+        // This is a link (text with link mark)
+        const linkText = node.text || ''
+        const markFrom = pos
+        const markTo = pos + node.nodeSize
+
+        // Replace the link with plain text
+        editor
+          .chain()
+          .focus()
+          .deleteRange({ from: markFrom, to: markTo })
+          .insertContent(linkText)
+          .run()
+
+        return false
+      }
+    })
+
     onClose()
   }
 

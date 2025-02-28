@@ -13,15 +13,25 @@ jest.mock('@tiptap/react', () => {
 })
 
 describe('ButtonPopover', () => {
+  // Mock editor
   const mockEditor = {
     chain: jest.fn().mockReturnThis(),
     focus: jest.fn().mockReturnThis(),
     deleteRange: jest.fn().mockReturnThis(),
+    insertContent: jest.fn().mockReturnThis(),
     run: jest.fn(),
     state: {
       doc: {
         nodesBetween: jest.fn((_from, _to, callback) => {
-          callback({ type: { name: 'buttonDirective' } }, 0)
+          callback(
+            {
+              type: { name: 'text' },
+              marks: [{ type: { name: 'link' } }],
+              text: 'Button Text',
+              nodeSize: 10
+            },
+            0
+          )
           return false
         })
       },
@@ -37,7 +47,10 @@ describe('ButtonPopover', () => {
     data: {
       url: 'https://example.com',
       shape: 'rect',
-      color: 'red'
+      color: 'red',
+      text: 'Button Text',
+      from: 10,
+      to: 20
     },
     onEdit: jest.fn(),
     onClose: jest.fn()

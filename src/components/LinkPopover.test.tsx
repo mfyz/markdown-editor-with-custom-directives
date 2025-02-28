@@ -4,92 +4,32 @@ import { Editor } from '@tiptap/react'
 
 // Mock the editor
 const mockEditor = {
-  chain: jest.fn(() => ({
-    focus: jest.fn().mockReturnThis(),
-    extendMarkRange: jest.fn().mockReturnThis(),
-    unsetLink: jest.fn().mockReturnThis(),
-    run: jest.fn()
-  })),
-  focus: jest.fn(),
-  extendMarkRange: jest.fn().mockReturnThis(),
-  unsetLink: jest.fn().mockReturnThis(),
+  chain: jest.fn().mockReturnThis(),
+  focus: jest.fn().mockReturnThis(),
+  deleteRange: jest.fn().mockReturnThis(),
+  insertContent: jest.fn().mockReturnThis(),
   run: jest.fn(),
-  commandManager: {},
-  extensionManager: {},
-  css: '',
-  schema: {},
-  view: {
-    dispatch: jest.fn(),
-    state: {
-      doc: {
-        toJSON: jest.fn().mockReturnValue({})
-      }
-    }
-  },
   state: {
     doc: {
-      toJSON: jest.fn().mockReturnValue({})
+      nodesBetween: jest.fn((_from, _to, callback) => {
+        callback(
+          {
+            type: { name: 'text' },
+            marks: [{ type: { name: 'link' } }],
+            text: 'Link Text',
+            nodeSize: 10
+          },
+          0
+        )
+        return false
+      })
+    },
+    selection: {
+      from: 0,
+      to: 5
     }
-  },
-  isFocused: jest.fn().mockReturnValue(true),
-  isInitialized: jest.fn().mockReturnValue(true),
-  getAttributes: jest.fn(),
-  getMarkAttrs: jest.fn(),
-  getMarkRange: jest.fn(),
-  getSelection: jest.fn(),
-  getSelectionRange: jest.fn(),
-  getSelectionText: jest.fn(),
-  getSelectionNode: jest.fn(),
-  getSelectionParentNode: jest.fn(),
-  extensionStorage: {},
-  options: {},
-  storage: {},
-  commands: {},
-  can: jest.fn().mockReturnValue(true),
-  injectCSS: jest.fn(),
-  setOptions: jest.fn(),
-  setEditable: jest.fn(),
-  isEditable: jest.fn().mockReturnValue(true),
-  registerPlugin: jest.fn(),
-  unregisterPlugin: jest.fn(),
-  createExtensionManager: jest.fn(),
-  createCommandManager: jest.fn(),
-  createSchema: jest.fn(),
-  createView: jest.fn(),
-  createNodeViews: jest.fn(),
-  prependClass: jest.fn(),
-  isCapturingTransaction: jest.fn().mockReturnValue(false),
-  capturedTransaction: {},
-  captureTransaction: jest.fn(),
-  dispatchTransaction: jest.fn(),
-  isActive: jest.fn(),
-  getJSON: jest.fn(),
-  getHTML: jest.fn(),
-  getText: jest.fn(),
-  isEmpty: jest.fn(),
-  getCharacterCount: jest.fn(),
-  destroy: jest.fn(),
-  isDestroyed: jest.fn().mockReturnValue(false),
-  $node: jest.fn(),
-  $nodes: jest.fn(),
-  $pos: jest.fn(),
-  getNodeByPos: jest.fn(),
-  getNodeByContent: jest.fn(),
-  getNodeByName: jest.fn(),
-  getNodeByType: jest.fn(),
-  getNodesByName: jest.fn(),
-  getNodesByType: jest.fn(),
-  getNodesByContent: jest.fn(),
-  $doc: {},
-  callbacks: {},
-  on: jest.fn(),
-  emit: jest.fn(),
-  off: jest.fn(),
-  setContent: jest.fn(),
-  getSelectedText: jest.fn(),
-  once: jest.fn(),
-  removeAllListeners: jest.fn()
-}
+  }
+} as unknown as Editor
 
 describe('LinkPopover', () => {
   const mockProps = {
@@ -129,6 +69,8 @@ describe('LinkPopover', () => {
     const deleteButton = screen.getByTitle('Remove link')
     fireEvent.click(deleteButton)
 
+    expect(mockEditor.chain).toHaveBeenCalled()
+    expect(mockEditor.state.doc.nodesBetween).toHaveBeenCalled()
     expect(mockProps.onClose).toHaveBeenCalledTimes(1)
   })
 

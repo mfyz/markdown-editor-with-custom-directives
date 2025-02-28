@@ -115,6 +115,7 @@ const MarkdownEditor = ({
   const [showLinkPopover, setShowLinkPopover] = useState(false)
   const [showColorPickerModal, setShowColorPickerModal] = useState(false)
   const [showButtonPickerModal, setShowButtonPickerModal] = useState(false)
+  const [isEditingButton, setIsEditingButton] = useState(false)
   const [linkPopoverPosition, setLinkPopoverPosition] = useState({
     top: 0,
     left: 0
@@ -127,7 +128,10 @@ const MarkdownEditor = ({
   const [currentButtonData, setCurrentButtonData] = useState({
     url: '',
     shape: '',
-    color: ''
+    color: '',
+    text: '',
+    from: 0,
+    to: 0
   })
   const [showButtonPopover, setShowButtonPopover] = useState(false)
   const popoverRef = useRef<HTMLDivElement>(null)
@@ -141,7 +145,7 @@ const MarkdownEditor = ({
 
     // Add rule for button directives
     service.addRule('buttonDirective', {
-      filter: node => {
+      filter: (node: HTMLElement): boolean => {
         return (
           node.nodeName === 'A' && node.classList.contains('button-directive')
         )
@@ -288,7 +292,10 @@ const MarkdownEditor = ({
                   setCurrentButtonData({
                     url: element.getAttribute('href') || '#',
                     shape,
-                    color
+                    color,
+                    text: element.textContent || '',
+                    from: from,
+                    to: from + (element.textContent?.length || 0)
                   })
                   break
                 }
@@ -461,28 +468,33 @@ const MarkdownEditor = ({
   }, [])
 
   useEffect(() => {
-    // Handle button selection event
-    const handleButtonSelected = (e: CustomEvent) => {
-      const { pos, attrs } = e.detail
-      const { url, shape, color } = attrs
+    // Event listener for button selection
+    const handleButtonSelected = (event: Event) => {
+      const customEvent = event as CustomEvent
+      const { attrs, pos, nodePosition } = customEvent.detail
 
-      // Get coordinates at position
-      const coordinates = editor?.view.coordsAtPos(pos)
-      if (!coordinates) return
+      if (attrs) {
+        // Get coordinates at position
+        const coordinates = editor?.view.coordsAtPos(pos)
+        if (!coordinates) return
 
-      setButtonPopoverPosition({
-        top: coordinates.top - 60, // Increased offset to position higher above content
-        left: coordinates.left
-      })
+        setButtonPopoverPosition({
+          top: coordinates.top - 60, // Increased offset to position higher above content
+          left: coordinates.left
+        })
 
-      setCurrentButtonData({
-        url,
-        shape,
-        color
-      })
+        setCurrentButtonData({
+          url: attrs.url || '#',
+          shape: attrs.shape || 'pill',
+          color: attrs.color || 'blue',
+          text: attrs.text || '',
+          from: nodePosition.from,
+          to: nodePosition.to
+        })
 
-      setShowButtonPopover(true)
-      setShowLinkPopover(false)
+        setShowButtonPopover(true)
+        setShowLinkPopover(false)
+      }
     }
 
     window.addEventListener(
@@ -511,7 +523,10 @@ const MarkdownEditor = ({
             onToggleSourceMode={toggleSourceMode}
             onShowLinkModal={() => setShowLinkModal(true)}
             onShowColorPickerModal={() => setShowColorPickerModal(true)}
-            onShowButtonPickerModal={() => setShowButtonPickerModal(true)}
+            onShowButtonPickerModal={() => {
+              setIsEditingButton(false)
+              setShowButtonPickerModal(true)
+            }}
             singleLineMode={singleLineMode}
           />
         </div>
@@ -566,6 +581,7 @@ const MarkdownEditor = ({
                   editor={editor}
                   data={currentButtonData}
                   onEdit={() => {
+                    setIsEditingButton(true)
                     setShowButtonPickerModal(true)
                     setShowButtonPopover(false)
                   }}
@@ -589,7 +605,19 @@ const MarkdownEditor = ({
       {showButtonPickerModal && editor && (
         <ButtonPickerModal
           editor={editor}
-          onClose={() => setShowButtonPickerModal(false)}
+          onClose={() => {
+            setShowButtonPickerModal(false)
+            setIsEditingButton(false)
+          }}
+          initialUrl={currentButtonData.url}
+          initialStyle={`${currentButtonData.shape}-${currentButtonData.color}`}
+          initialText={currentButtonData.text}
+          isEditMode={isEditingButton}
+          buttonPosition={
+            isEditingButton
+              ? { from: currentButtonData.from, to: currentButtonData.to }
+              : undefined
+          }
         />
       )}
     </div>

@@ -8,6 +8,9 @@ interface ButtonPickerModalProps {
   onClose: () => void
   initialUrl?: string
   initialStyle?: string
+  initialText?: string
+  isEditMode?: boolean
+  buttonPosition?: { from: number; to: number }
 }
 
 // Button style presets - separated into shape and color
@@ -32,9 +35,12 @@ const ButtonPickerModal = ({
   editor,
   onClose,
   initialUrl = '',
-  initialStyle = 'pill-blue'
+  initialStyle = 'pill-blue',
+  initialText = '',
+  isEditMode = false,
+  buttonPosition
 }: ButtonPickerModalProps) => {
-  const [buttonText, setButtonText] = useState('')
+  const [buttonText, setButtonText] = useState(initialText)
   const [url, setUrl] = useState(initialUrl)
 
   // Split the initial style into shape and color
@@ -51,52 +57,80 @@ const ButtonPickerModal = ({
   const urlInputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
-    // Get the selected text from the editor
-    let text = ''
-    if (editor && editor.state.selection) {
+    // Only get selected text if we're not in edit mode
+    if (!isEditMode) {
+      let text = ''
       const { from, to } = editor.state.selection
-      text = editor.state.doc.textBetween(from, to, ' ')
+      if (from !== to) {
+        text = editor.state.doc.textBetween(from, to, ' ')
+      }
+      setButtonText(text)
     }
-    setButtonText(text)
 
-    // Focus on the text input if no text is selected, otherwise focus on URL
+    // Focus on the URL input if in edit mode, otherwise follow normal logic
     setTimeout(() => {
-      if (!text && buttonTextInputRef.current) {
+      if (isEditMode && urlInputRef.current) {
+        urlInputRef.current.focus()
+      } else if (!buttonText && buttonTextInputRef.current) {
         buttonTextInputRef.current.focus()
       } else if (urlInputRef.current) {
         urlInputRef.current.focus()
       }
     }, 100)
-  }, [editor])
+  }, [editor, buttonText, isEditMode])
 
   const handleApplyButton = () => {
-    if (!buttonText.trim()) {
-      alert('Please enter button text')
+    if (!isEditMode && !buttonText) {
+      // If no text is entered and not in edit mode, focus on the text input
+      if (buttonTextInputRef.current) {
+        buttonTextInputRef.current.focus()
+      }
       return
     }
 
-    if (!url.trim()) {
-      alert('Please enter a URL')
-      return
+    // Create the button directive
+    const buttonDirective = `<a href="${url}" class="button-directive shape-${selectedShape} color-${selectedColor}">${buttonText}</a>`
+
+    // Find the link node, extract its text, and replace it with plain text
+    const { state } = editor
+    const { from, to } = state.selection
+
+    if (isEditMode && buttonPosition) {
+      // Find all nodes between the selection
+      state.doc.nodesBetween(from, to, (node, pos) => {
+        if (
+          node.type.name === 'text' &&
+          node.marks.some(mark => mark.type.name === 'link')
+        ) {
+          // This is a link (text with link mark)
+          // const buttonText = node.text || ''
+          const markFrom = pos
+          const markTo = pos + node.nodeSize
+
+          // In edit mode, delete the existing button and insert the new one at the exact position
+          editor
+            .chain()
+            .focus()
+            // .deleteRange({ from: buttonPosition.from, to: buttonPosition.to })
+            .deleteRange({ from: markFrom, to: markTo })
+            .insertContent(buttonDirective)
+            .run()
+        }
+      })
+    } else {
+      // In add mode, insert the button directive at the current selection
+      editor
+        .chain()
+        .focus()
+        .deleteRange({ from, to })
+        // .insertContent(buttonDirective)
+        .run()
     }
-
-    // Create the button directive with attribute-based syntax
-    const buttonDirective = `:button[${buttonText}]{url=${url} shape=${selectedShape} color=${selectedColor}}`
-
-    // Insert the button directive at the current selection
-    const { from, to } = editor.state.selection
-    editor
-      .chain()
-      .focus()
-      .deleteRange({ from, to })
-      .insertContent(buttonDirective)
-      .run()
 
     onClose()
   }
 
   const handleBackdropClick = (e: React.MouseEvent) => {
-    // Only close if clicking directly on the backdrop
     if (e.target === e.currentTarget) {
       onClose()
     }
@@ -112,25 +146,27 @@ const ButtonPickerModal = ({
         }}
       >
         <div className="color-picker-header">
-          <h3>Button Settings</h3>
-          <button onClick={onClose} className="close-button" aria-label="Close">
+          <h3>{isEditMode ? 'Edit Button' : 'Add Button'}</h3>
+          <button className="close-button" onClick={onClose}>
             <FiX />
           </button>
         </div>
 
         <div className="color-picker-content">
-          <div className="form-group">
-            <label htmlFor="buttonText">Button Text</label>
-            <input
-              type="text"
-              id="buttonText"
-              value={buttonText}
-              onChange={e => setButtonText(e.target.value)}
-              placeholder="Enter button text"
-              className="color-text-input"
-              ref={buttonTextInputRef}
-            />
-          </div>
+          {!isEditMode && (
+            <div className="form-group">
+              <label htmlFor="buttonText">Button Text</label>
+              <input
+                type="text"
+                id="buttonText"
+                value={buttonText}
+                onChange={e => setButtonText(e.target.value)}
+                placeholder="Enter button text"
+                className="color-text-input"
+                ref={buttonTextInputRef}
+              />
+            </div>
+          )}
 
           <div className="form-group">
             <label htmlFor="buttonUrl">URL</label>
@@ -156,7 +192,7 @@ const ButtonPickerModal = ({
                   }`}
                   onClick={() => setSelectedShape(shape.id)}
                 >
-                  <span>{shape.label}</span>
+                  {shape.label}
                 </div>
               ))}
             </div>
@@ -173,7 +209,7 @@ const ButtonPickerModal = ({
                   }`}
                   onClick={() => setSelectedColor(color.id)}
                 >
-                  <span className="color-label">{color.label}</span>
+                  {color.label}
                 </div>
               ))}
             </div>
@@ -185,7 +221,9 @@ const ButtonPickerModal = ({
               <button
                 className={`button-preview ${selectedShape}-${selectedColor}`}
               >
-                {buttonText || 'Button Text'}
+                {isEditMode
+                  ? buttonText || 'Button Text'
+                  : buttonText || 'Button Text'}
               </button>
             </div>
           </div>

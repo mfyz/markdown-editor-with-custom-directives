@@ -18,13 +18,13 @@
   vertical-align: baseline;
 }
 
-.button-directive:hover {
-  filter: brightness(1.1);
-  text-decoration: none;
-}
-
 .button-directive:active {
   filter: brightness(0.9);
+}
+
+a.button-directive:hover {
+  filter: brightness(1.1);
+  text-decoration: none;
 }
 
 .directive-hidden {
@@ -70,6 +70,22 @@
 .button-directive.color-gray {
   background-color: #6b7280;
   color: white;
+}
+
+.button-directive.color-yellow {
+  background-color: #f59e0b;
+  color: white;
+}
+
+.button-directive.color-black {
+  background-color: #1f2937;
+  color: white;
+}
+
+.button-directive.color-white {
+  background-color: #ffffff;
+  color: #1f2937;
+  border: 1px solid #ccc;
 }
 
 .directive-syntax {
