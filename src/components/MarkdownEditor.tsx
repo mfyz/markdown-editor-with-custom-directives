@@ -12,6 +12,9 @@ import './MarkdownEditor.css'
 import EditorToolbar from './EditorToolbar'
 import LinkModal from './LinkModal'
 import LinkPopover from './LinkPopover'
+import ColorPickerModal from './ColorPickerModal'
+import { TextColorExtension } from '../extensions/TextColorExtension'
+import '../extensions/TextColorExtension.css'
 
 interface MarkdownEditorProps {
   content: string
@@ -33,13 +36,14 @@ const MarkdownEditor = ({
   const [isSourceMode, setIsSourceMode] = useState(false)
   const [showLinkModal, setShowLinkModal] = useState(false)
   const [showLinkPopover, setShowLinkPopover] = useState(false)
+  const [showColorPickerModal, setShowColorPickerModal] = useState(false)
   const [linkPopoverPosition, setLinkPopoverPosition] = useState({
     top: 0,
     left: 0
   })
   const [currentLinkUrl, setCurrentLinkUrl] = useState('')
   const popoverRef = useRef<HTMLDivElement>(null)
-  const [isFocused, setIsFocused] = useState(false)
+  const [isEditorActive, setIsEditorActive] = useState(false)
   const [turndownService] = useState(
     () =>
       new TurndownService({
@@ -71,7 +75,8 @@ const MarkdownEditor = ({
       }),
       TextStyle,
       Color,
-      Strike
+      Strike,
+      TextColorExtension
     ],
     content: initialHtml,
     editable: true,
@@ -91,11 +96,11 @@ const MarkdownEditor = ({
         : undefined,
       handleDOMEvents: {
         focus: () => {
-          setIsFocused(true)
+          setIsEditorActive(true)
           return false
         },
         blur: () => {
-          setIsFocused(false)
+          setIsEditorActive(false)
           return false
         }
       }
@@ -110,6 +115,14 @@ const MarkdownEditor = ({
       const html = editor.getHTML()
       const md = turndownService.turndown(html)
       onChange(md)
+    },
+    onTransaction: ({ editor, transaction }) => {
+      // Check if this transaction involves setting marks (like colors)
+      if (transaction.steps.some(step => step.hasOwnProperty('mark'))) {
+        const html = editor.getHTML()
+        const md = turndownService.turndown(html)
+        onChange(md)
+      }
     },
     onSelectionUpdate: ({ editor }) => {
       // Check if selection is within a link
@@ -151,6 +164,29 @@ const MarkdownEditor = ({
         return ['s', 'strike', 'del'].includes(tagName)
       },
       replacement: content => `~~${content}~~`
+    })
+
+    // Add rules for colored text
+    turndownService.addRule('coloredText', {
+      filter: (node: HTMLElement) => {
+        return node.style.color !== ''
+      },
+      replacement: (content, node) => {
+        const element = node as HTMLElement
+        const color = element.style.color
+        // Convert RGB to Hex if needed
+        let hexColor = color
+        if (color.startsWith('rgb')) {
+          const rgbMatch = color.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/)
+          if (rgbMatch) {
+            const r = parseInt(rgbMatch[1], 10).toString(16).padStart(2, '0')
+            const g = parseInt(rgbMatch[2], 10).toString(16).padStart(2, '0')
+            const b = parseInt(rgbMatch[3], 10).toString(16).padStart(2, '0')
+            hexColor = `#${r}${g}${b}`
+          }
+        }
+        return `:color[${content}]{${hexColor}}`
+      }
     })
 
     // Add rules for links
@@ -217,7 +253,7 @@ const MarkdownEditor = ({
   return (
     <div className={`markdown-editor ${className}`}>
       {/* Show toolbar always for regular mode, or only when focused for single-line mode */}
-      {(!singleLineMode || (singleLineMode && isFocused)) && (
+      {(!singleLineMode || (singleLineMode && isEditorActive)) && (
         <div className="editor-toolbar-container">
           <EditorToolbar
             editor={editor}
@@ -226,6 +262,7 @@ const MarkdownEditor = ({
             allowSourceView={allowSourceView && !singleLineMode}
             onToggleSourceMode={toggleSourceMode}
             onShowLinkModal={() => setShowLinkModal(true)}
+            onShowColorPickerModal={() => setShowColorPickerModal(true)}
             singleLineMode={singleLineMode}
           />
         </div>
@@ -271,6 +308,13 @@ const MarkdownEditor = ({
       </div>
       {showLinkModal && editor && (
         <LinkModal editor={editor} onClose={() => setShowLinkModal(false)} />
+      )}
+      {showColorPickerModal && editor && (
+        <ColorPickerModal
+          editor={editor}
+          onClose={() => setShowColorPickerModal(false)}
+          initialColor={editor.getAttributes('textStyle').color || 'black'}
+        />
       )}
     </div>
   )

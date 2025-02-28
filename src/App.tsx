@@ -14,6 +14,18 @@ Lorem ipsum [my link](https://www.google.com) dolor sit amet, consectetur adipis
 
 [Another](https://www.super-long-link-that-will-overflow-the-popover.com)
 
+## Custom Directives
+
+### Text Color
+
+You can add colored text using the :color[text]{#color} directive:
+
+:color[This text is red]{#ff0000}
+
+:color[This text is blue]{#0000ff}
+
+:color[This text is green]{#00ff00}
+
 ## Headings
 
 # Heading 1
@@ -85,7 +97,7 @@ function example() {
 
   // State for the single-line editor
   const [singleLineMarkdown, setSingleLineMarkdown] = useState(
-    'This is a single line editor with **bold** and *italic* text and a [link](https://example.com).'
+    'This is a :color[single line]{#ff0000} editor with **bold** and *italic* text and a [link](https://example.com)'
   )
 
   return (

@@ -14,7 +14,7 @@
 .editor-toolbar-container {
   position: relative; /* For tooltip positioning */
   flex-shrink: 0;
-  z-index: 10;
+  z-index: 5; /* Reduced to ensure modals appear above */
   background-color: #fff;
 }
 

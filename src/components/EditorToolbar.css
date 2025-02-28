@@ -48,7 +48,7 @@
   font-size: 12px;
   border-radius: 4px;
   white-space: nowrap;
-  z-index: 1000;
+  z-index: 100; /* Reduced to ensure modals appear above */
   pointer-events: none;
 }
 
@@ -148,4 +148,10 @@
 .editor-toolbar.disabled button:not(.source-toggle).is-active {
   color: #999;
   background-color: #f0f0f0;
+}
+
+/* Style for buttons that require text selection but have none */
+.editor-toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }

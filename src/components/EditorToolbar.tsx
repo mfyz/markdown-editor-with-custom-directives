@@ -17,6 +17,7 @@ import {
   RiStrikethrough,
   RiDoubleQuotesL
 } from 'react-icons/ri'
+import { MdFormatColorText } from 'react-icons/md'
 import { useState, useCallback } from 'react'
 import LinkModal from './LinkModal'
 
@@ -30,6 +31,7 @@ interface EditorToolbarProps {
   allowSourceView?: boolean
   onToggleSourceMode?: () => void
   onShowLinkModal?: () => void
+  onShowColorPickerModal?: () => void
   singleLineMode?: boolean
 }
 
@@ -40,6 +42,7 @@ const EditorToolbar = ({
   allowSourceView = true,
   onToggleSourceMode = () => {},
   onShowLinkModal = () => {},
+  onShowColorPickerModal = () => {},
   singleLineMode = false
 }: EditorToolbarProps) => {
   const [showLinkModal, setShowLinkModal] = useState(false)
@@ -69,6 +72,7 @@ const EditorToolbar = ({
   // Check if the current selection is a link
   const isLinkActive = editor?.isActive('link') ?? false
   const canAddLink = hasTextSelection() || isLinkActive
+  const canAddColor = hasTextSelection()
 
   // Prevent losing focus when clicking toolbar buttons
   const handleButtonMouseDown = useCallback((e: React.MouseEvent) => {
@@ -244,6 +248,15 @@ const EditorToolbar = ({
           disabled={disabled || !canAddLink}
         >
           <FiLink />
+        </button>
+
+        <button
+          onMouseDown={handleButtonMouseDown}
+          onClick={onShowColorPickerModal}
+          title={canAddColor ? 'Text Color' : 'Text Color: Select text first'}
+          disabled={disabled || !canAddColor}
+        >
+          <MdFormatColorText />
         </button>
       </div>
 

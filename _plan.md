@@ -265,7 +265,7 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 
 ### Iteration 5: Integration and Demo Page
 
-**Checkpoint 5.1: Component API Finalization**
+⏩ **Checkpoint 5.1: Component API Finalization**
 
 - Finalize component props and API
 - Document usage patterns
