@@ -95,7 +95,6 @@ const ButtonPickerModal = ({
           editor
             .chain()
             .focus()
-            // .deleteRange({ from: buttonPosition.from, to: buttonPosition.to })
             .deleteRange({ from: markFrom, to: markTo })
             .insertContent(buttonDirective)
             .run()

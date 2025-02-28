@@ -216,6 +216,16 @@ const EditorToolbar = ({
             <div className="divider" />
           </>
         )}
+
+        <button
+          onMouseDown={handleButtonMouseDown}
+          onClick={onShowColorPickerModal}
+          title={canAddColor ? 'Text Color' : 'Text Color: Select text first'}
+          disabled={disabled || !canAddColor}
+        >
+          <MdFormatColorText />
+        </button>
+
         <button
           onMouseDown={handleButtonMouseDown}
           onClick={onShowLinkModal}
@@ -230,15 +240,6 @@ const EditorToolbar = ({
           disabled={disabled || !canAddLink}
         >
           <FiLink />
-        </button>
-
-        <button
-          onMouseDown={handleButtonMouseDown}
-          onClick={onShowColorPickerModal}
-          title={canAddColor ? 'Text Color' : 'Text Color: Select text first'}
-          disabled={disabled || !canAddColor}
-        >
-          <MdFormatColorText />
         </button>
 
         <button

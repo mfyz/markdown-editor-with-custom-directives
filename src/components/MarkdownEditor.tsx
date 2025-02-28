@@ -613,6 +613,7 @@ const MarkdownEditor = ({
           onClose={() => {
             setShowButtonPickerModal(false)
             setIsEditingButton(false)
+            onChange(turndownService.turndown(editor.getHTML()))
           }}
           initialUrl={currentButtonData.url}
           initialShape={currentButtonData.shape}
