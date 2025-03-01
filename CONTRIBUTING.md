@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your interest in contributing to the `@mfz/markdown-editor-with-custom-directives` package! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to the `@mfyz/markdown-editor-with-custom-directives` package! This document provides guidelines and instructions for contributing to this project.
 
 ## Code of Conduct
 
