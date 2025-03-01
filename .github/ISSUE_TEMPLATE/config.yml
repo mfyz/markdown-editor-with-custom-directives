@@ -1,0 +1,10 @@
+---
+name: Choose an issue template
+about: Please choose from one of the available templates
+---
+
+Please choose one of the available issue templates:
+
+- [Bug Report](https://github.com/mfyz/markdown-editor-with-custom-directives/issues/new?template=bug_report.md)
+- [Feature Request](https://github.com/mfyz/markdown-editor-with-custom-directives/issues/new?template=feature_request.md)
+- [Documentation Improvement](https://github.com/mfyz/markdown-editor-with-custom-directives/issues/new?template=documentation.md)
