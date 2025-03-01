@@ -4,5 +4,9 @@
 # Run lint-staged to format files
 npx lint-staged
 
-# Run unit tests
+# Run React unit tests
 npm test
+
+# Run vanilla-renderer unit tests
+cd vanilla-renderer && npm test
+cd ..
