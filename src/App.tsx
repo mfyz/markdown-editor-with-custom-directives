@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import MarkdownEditor from './components/MarkdownEditor'
+import MarkdownRenderer from './components/MarkdownRenderer'
 
 const exampleSingleLine =
   'This is a :color[single line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rect color=red} '
@@ -123,6 +124,10 @@ function App() {
         <div className="output-preview">
           <h3>Output:</h3>
           <pre>{singleLineMarkdown}</pre>
+          <h3>Preview with Renderer Method:</h3>
+          <div style={{ backgroundColor: '#efefef', padding: '5px 20px' }}>
+            <MarkdownRenderer content={singleLineMarkdown} />
+          </div>
         </div>
       </section>
 

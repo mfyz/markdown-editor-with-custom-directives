@@ -4,7 +4,7 @@
     Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   line-height: 1.6;
   color: #333;
-  padding: 1rem;
+  /* padding: 1rem; */
 }
 
 .markdown-renderer h1,

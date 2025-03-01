@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import '../extensions/TextColorExtension.css'
 import '../extensions/ButtonDirectiveExtension.css'
 import './MarkdownRenderer.css'
+import { configuredMarked } from '../utils/markdownUtils'
 
 /**
  * MarkdownRenderer component for rendering markdown content with custom directives
@@ -15,81 +16,37 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
   const [renderedHtml, setRenderedHtml] = useState<string>('')
 
   useEffect(() => {
-    // Configure marked to handle custom directives
-    const renderer: Partial<typeof marked.Renderer.prototype> = {
-      text(token: any) {
-        // Get the text from the token
-        const text = typeof token === 'string' ? token : token.text || ''
-
-        // Handle color directive
-        let processedText = text.replace(
-          /:color\[(.*?)\]\{(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\}/g,
-          (_: string, content: string, color: string) =>
-            `<span class="text-color-directive" style="color: ${color}" data-type="color-directive">${content}</span>`
-        )
-
-        return processedText
-      }
-    }
-
-    marked.use({ renderer })
-
-    // Add custom tokenizer for button directive
-    marked.use({
-      extensions: [
-        {
-          name: 'button-directive',
-          level: 'inline',
-          start(src: string) {
-            return src.match(/:button\[/)?.index
-          },
-          tokenizer(src: string) {
-            const rule = /^:button\[(.*?)\]\{(.*?)\}/
-            const match = rule.exec(src)
-            if (match) {
-              return {
-                type: 'button-directive',
-                raw: match[0],
-                text: match[1],
-                attrs: match[2]
-              }
-            }
-            return undefined
-          },
-          renderer(token: any) {
-            // Parse attributes
-            const attrs: Record<string, string> = {}
-            const attrRegex = /(\w+)=([^\s]+|"[^"]*")/g
-            let attrMatch
-
-            while ((attrMatch = attrRegex.exec(token.attrs)) !== null) {
-              const key = attrMatch[1]
-              let value = attrMatch[2]
-
-              // Remove quotes if present
-              if (value.startsWith('"') && value.endsWith('"')) {
-                value = value.substring(1, value.length - 1)
-              }
-
-              attrs[key] = value
-            }
-
-            const url = attrs.url || '#'
-            const shape = attrs.shape || 'pill'
-            const color = attrs.color || 'blue'
-
-            return `<a class="button-directive shape-${shape} color-${color}" href="${url}" data-type="button-directive">${token.text}</a>`
-          }
-        }
-      ]
-    })
-
     // Render the markdown content
-    const html = marked.parse(content)
-    if (typeof html === 'string') {
-      setRenderedHtml(html)
-    } else {
-      html.then(result => setRenderedHtml(result))
+    try {
+      const htmlResult = configuredMarked.parse(content || '')
+
+      const processHtml = (htmlStr: string) => {
+        // Sanitize the HTML to prevent XSS attacks
+        return typeof DOMPurify !== 'undefined'
+          ? DOMPurify.sanitize(htmlStr, {
+              ADD_ATTR: [
+                'target',
+                'class',
+                'style',
+                'data-type',
+                'data-shape',
+                'data-color'
+              ],
+              ADD_TAGS: ['span']
+            })
+          : htmlStr
+      }
+
+      if (typeof htmlResult === 'string') {
+        setRenderedHtml(processHtml(htmlResult))
+      } else {
+        htmlResult.then(result => {
+          setRenderedHtml(processHtml(result))
+        })
+      }
+    } catch (error) {
+      console.error('Error parsing markdown:', error)
+      setRenderedHtml(`<p>Error rendering markdown</p>`)
     }
   }, [content])
 

@@ -57,6 +57,22 @@ function MarkdownDisplay({ content }) {
 }
 ```
 
+### Using with Vite
+
+If you're using Vite and encounter resolution issues, add the following to your `vite.config.js`:
+
+```js
+export default defineConfig({
+  // ... other config
+  resolve: {
+    alias: {
+      '@mfyz/markdown-editor-with-custom-directives':
+        '@mfyz/markdown-editor-with-custom-directives/dist/index.js'
+    }
+  }
+})
+```
+
 ## Custom Directives
 
 ### Color Directive

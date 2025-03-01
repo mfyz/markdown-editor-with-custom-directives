@@ -5,7 +5,6 @@ import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
 import { useState, useEffect, useRef, useMemo } from 'react'
 import TurndownService from 'turndown'
-import { marked } from 'marked'
 import type { Renderer } from 'marked'
 import './MarkdownEditor.css'
 import EditorToolbar from './EditorToolbar'
@@ -18,29 +17,7 @@ import { TextColorExtension } from '../extensions/TextColorExtension'
 import { ButtonDirectiveExtension } from '../extensions/ButtonDirectiveExtension'
 import '../extensions/TextColorExtension.css'
 import '../extensions/ButtonDirectiveExtension.css'
-
-// Helper function to parse attributes from a string
-export function parseAttributes(attrString: string): Record<string, string> {
-  const attrs: Record<string, string> = {}
-
-  // Match key=value pairs, handling spaces properly
-  const attrRegex = /(\w+)=([^\s]+|"[^"]*")/g
-  let match
-
-  while ((match = attrRegex.exec(attrString)) !== null) {
-    const key = match[1]
-    let value = match[2]
-
-    // Remove quotes if present
-    if (value.startsWith('"') && value.endsWith('"')) {
-      value = value.substring(1, value.length - 1)
-    }
-
-    attrs[key] = value
-  }
-
-  return attrs
-}
+import { configuredMarked, parseAttributes } from '../utils/markdownUtils'
 
 // Add custom renderer for color and button directives
 const renderer: Partial<Renderer> = {
@@ -57,10 +34,10 @@ const renderer: Partial<Renderer> = {
   }
 }
 
-marked.use({ renderer })
+configuredMarked.use({ renderer })
 
 // Add custom handler for button-directive elements
-marked.use({
+configuredMarked.use({
   extensions: [
     {
       name: 'button-directive',
@@ -193,7 +170,7 @@ const MarkdownEditor = ({
   const updatingFromSource = useRef(false)
 
   // Convert content to HTML for the editor
-  const initialHtml = marked(content)
+  const initialHtml = configuredMarked(content)
 
   // Memoize editor configuration to prevent unnecessary re-renders
   const editorConfig = useMemo(
@@ -480,7 +457,7 @@ const MarkdownEditor = ({
 
       try {
         // Parse markdown to HTML
-        const html = marked(content)
+        const html = configuredMarked(content)
 
         // Update editor content
         editor.commands.setContent(html)
@@ -512,7 +489,7 @@ const MarkdownEditor = ({
       // Update the editor content if available
       if (editor) {
         try {
-          const html = marked(newMarkdown)
+          const html = configuredMarked(newMarkdown)
           editor.commands.setContent(html)
         } catch (error) {
           console.error('Error updating editor from source:', error)
