@@ -1,12 +1,12 @@
 # Publishing Guide
 
-This document outlines the steps required to publish a new version of the `@mfyz/markdown-editor-with-color-and-button` package to npm.
+This document outlines the steps required to publish a new version of the `@mfz/markdown-editor-with-custom-directives` package to npm.
 
 ## Prerequisites
 
 Before publishing, ensure you have:
 
-1. An npm account with access to the `@mfyz` organization
+1. An npm account with access to the `@mfz` organization
 2. Logged in to npm via the CLI (`npm login`)
 3. All tests passing (`npm test`)
 4. All changes committed to the repository
@@ -72,7 +72,7 @@ Publish the package to npm:
 npm publish --access public
 ```
 
-The `--access public` flag is required for scoped packages (`@mfyz/...`) to be publicly accessible.
+The `--access public` flag is required for scoped packages (`@mfz/...`) to be publicly accessible.
 
 ### 5. Create a GitHub Release
 
@@ -113,7 +113,7 @@ Example:
 
 It may take a few minutes for the package to appear on the npm registry. If it doesn't appear after 15 minutes:
 
-1. Check if the package was published successfully with `npm view @mfyz/markdown-editor-with-color-and-button`
+1. Check if the package was published successfully with `npm view @mfz/markdown-editor-with-custom-directives`
 2. Verify your npm account has the correct permissions
 
 ### Publishing Errors

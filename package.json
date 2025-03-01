@@ -1,5 +1,5 @@
 {
-  "name": "@mfyz/markdown-editor-with-color-and-button",
+  "name": "@mfz/markdown-editor-with-custom-directives",
   "version": "0.1.0",
   "description": "A React markdown editor with custom color and button directives",
   "type": "module",

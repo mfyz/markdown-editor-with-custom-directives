@@ -1,4 +1,4 @@
-# Markdown Editor with Color and Button Directives
+# Markdown Editor with Custom Directives
 
 A React markdown editor with custom directives for colored text and styled buttons.
 
@@ -13,7 +13,7 @@ A React markdown editor with custom directives for colored text and styled butto
 ## Installation
 
 ```bash
-npm install @mfyz/markdown-editor-with-color-and-button
+npm install @mfz/markdown-editor-with-custom-directives
 ```
 
 ## Usage
@@ -21,8 +21,8 @@ npm install @mfyz/markdown-editor-with-color-and-button
 ### Editor Component
 
 ```jsx
-import { MarkdownEditor } from '@mfyz/markdown-editor-with-color-and-button'
-import '@mfyz/markdown-editor-with-color-and-button/dist/styles/index.css'
+import { MarkdownEditor } from '@mfz/markdown-editor-with-custom-directives'
+import '@mfz/markdown-editor-with-custom-directives/dist/styles/index.css'
 
 function App() {
   const [markdown, setMarkdown] = useState('# Hello World')
@@ -45,8 +45,8 @@ function App() {
 If you only need to render markdown with the custom directives:
 
 ```jsx
-import { MarkdownRenderer } from '@mfyz/markdown-editor-with-color-and-button'
-import '@mfyz/markdown-editor-with-color-and-button/dist/styles/index.css'
+import { MarkdownRenderer } from '@mfz/markdown-editor-with-custom-directives'
+import '@mfz/markdown-editor-with-custom-directives/dist/styles/index.css'
 
 function MarkdownDisplay({ content }) {
   return (

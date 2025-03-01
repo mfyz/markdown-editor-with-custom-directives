@@ -1,6 +1,6 @@
 # Contributing Guide
 
-Thank you for your interest in contributing to the `@mfyz/markdown-editor-with-color-and-button` package! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to the `@mfz/markdown-editor-with-custom-directives` package! This document provides guidelines and instructions for contributing to this project.
 
 ## Code of Conduct
 
@@ -18,7 +18,7 @@ Please be respectful and considerate of others when contributing to this project
 1. Fork the repository
 2. Clone your fork:
    ```bash
-   git clone https://github.com/your-username/markdown-editor-with-custom-directives.git
+   git clone https://github.com/mfyz/markdown-editor-with-custom-directives.git
    cd markdown-editor-with-custom-directives
    ```
 3. Install dependencies:

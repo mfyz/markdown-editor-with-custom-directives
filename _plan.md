@@ -308,7 +308,7 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 **Checkpoint 7.2: Build** ✅
 
 - Create `dist` folder and build the project for esm and es5 targets ✅
-- Rename project to be `@mfyz/markdown-editor-with-color-and-button` ✅
+- Rename project to be `@mfz/markdown-editor-with-custom-directives` ✅
 - Add MIT license ✅
 - Update README with new name and installation and usage instructions ✅
 
