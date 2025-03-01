@@ -3,8 +3,7 @@ import StarterKit from '@tiptap/starter-kit'
 import Link from '@tiptap/extension-link'
 import TextStyle from '@tiptap/extension-text-style'
 import Color from '@tiptap/extension-color'
-import Strike from '@tiptap/extension-strike'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useMemo } from 'react'
 import TurndownService from 'turndown'
 import { marked } from 'marked'
 import type { Renderer } from 'marked'
@@ -196,138 +195,182 @@ const MarkdownEditor = ({
   // Convert content to HTML for the editor
   const initialHtml = marked(content)
 
-  const editor = useEditor({
-    extensions: [
-      StarterKit,
-      Link.configure({
-        openOnClick: false,
-        HTMLAttributes: {
-          target: '_blank',
-          rel: 'noopener noreferrer'
-        }
-      }),
-      TextStyle,
-      Color,
-      Strike,
-      TextColorExtension.configure({
-        preserveInSingleLine: true
-      }),
-      ButtonDirectiveExtension.configure({
-        // Add any configuration options here if needed
-      })
-    ],
-    content: initialHtml,
-    editable: true,
-    autofocus: false,
-    editorProps: {
-      attributes: {
-        class: 'markdown-editor-content',
-        placeholder
-      },
-      handleKeyDown: singleLineMode
-        ? (_view, event) => {
-            // Prevent Enter key in single-line mode
-            if (event.key === 'Enter') {
-              return true // Returning true prevents the default behavior
+  // Memoize editor configuration to prevent unnecessary re-renders
+  const editorConfig = useMemo(
+    () => ({
+      extensions: [
+        StarterKit,
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            target: '_blank',
+            rel: 'noopener noreferrer'
+          }
+        }),
+        TextStyle,
+        Color,
+        TextColorExtension.configure({
+          preserveInSingleLine: true
+        }),
+        ButtonDirectiveExtension.configure({
+          // Add any configuration options here if needed
+        })
+      ],
+      content: initialHtml,
+      editable: true,
+      autofocus: false,
+      editorProps: {
+        attributes: {
+          class: 'markdown-editor-content',
+          placeholder
+        },
+        handleKeyDown: singleLineMode
+          ? (_view: any, event: KeyboardEvent) => {
+              // Prevent Enter key in single-line mode
+              if (event.key === 'Enter') {
+                return true // Returning true prevents the default behavior
+              }
+              return false
             }
+          : undefined,
+        handleDOMEvents: {
+          focus: () => {
+            setIsEditorActive(true)
+            return false
+          },
+          blur: () => {
+            setIsEditorActive(false)
             return false
           }
-        : undefined,
-      handleDOMEvents: {
-        focus: () => {
-          setIsEditorActive(true)
-          return false
-        },
-        blur: () => {
-          setIsEditorActive(false)
-          return false
         }
-      }
-    },
-    onUpdate: ({ editor }) => {
-      if (updatingFromExternal.current || updatingFromSource.current) {
-        updatingFromExternal.current = false
-        updatingFromSource.current = false
-        return
-      }
+      },
+      onUpdate: ({ editor }: { editor: any }) => {
+        if (updatingFromExternal.current || updatingFromSource.current) {
+          return
+        }
 
-      const html = editor.getHTML()
-      const md = turndownService.turndown(html)
-      onChange(md)
-    },
-    onTransaction: ({ editor, transaction }) => {
-      // Check if this transaction involves setting marks (like colors)
-      if (transaction.steps.some(step => step.hasOwnProperty('mark'))) {
+        // Set flag to prevent recursive updates
+        updatingFromExternal.current = true
+
         const html = editor.getHTML()
         const md = turndownService.turndown(html)
         onChange(md)
-      }
-    },
-    onSelectionUpdate: ({ editor }) => {
-      const { from } = editor.state.selection
 
-      // Check if selection is within a regular link
-      const linkAttrs = editor.getAttributes('link')
-      const isButton = Boolean(linkAttrs?.class?.includes('button-directive'))
-      if (linkAttrs.href && from !== 1000) {
-        const pos = editor.view.coordsAtPos(from)
-        setCurrentLinkUrl(linkAttrs.href)
-        if (isButton) {
-          // Get shape and color from DOM element classes
-          const dom = editor.view.dom
-          const selection = window.getSelection()
-          if (selection && selection.anchorNode) {
-            let currentNode = selection.anchorNode as HTMLElement
-            while (currentNode && currentNode !== dom) {
-              if (currentNode.nodeType === Node.ELEMENT_NODE) {
-                const element = currentNode as HTMLElement
-                if (element.classList.contains('button-directive')) {
-                  const classList = Array.from(element.classList)
-                  const shapeClass = classList.find(cls =>
-                    cls.startsWith('shape-')
-                  )
-                  const colorClass = classList.find(cls =>
-                    cls.startsWith('color-')
-                  )
-
-                  const shape = shapeClass ? shapeClass.split('-')[1] : 'pill'
-                  const color = colorClass ? colorClass.split('-')[1] : 'blue'
-
-                  setCurrentButtonData({
-                    url: element.getAttribute('href') || '#',
-                    shape,
-                    color,
-                    text: element.textContent || '',
-                    from: from,
-                    to: from + (element.textContent?.length || 0)
-                  })
-                  break
-                }
-              }
-              currentNode = currentNode.parentNode as HTMLElement
-            }
+        // Reset flag after a short delay to ensure state updates have completed
+        setTimeout(() => {
+          updatingFromExternal.current = false
+        }, 0)
+      },
+      onTransaction: ({
+        editor,
+        transaction
+      }: {
+        editor: any
+        transaction: any
+      }) => {
+        // Check if this transaction involves setting marks (like colors)
+        if (
+          transaction.steps.some((step: any) => step.hasOwnProperty('mark'))
+        ) {
+          // Skip if we're already in an update cycle
+          if (updatingFromExternal.current || updatingFromSource.current) {
+            return
           }
 
-          setButtonPopoverPosition({
-            top: pos.top - 60, // Increased offset to position higher above content
-            left: pos.left
-          })
-          setShowButtonPopover(true)
-          setShowLinkPopover(false)
+          // Set flag to prevent recursive updates
+          updatingFromExternal.current = true
+
+          const html = editor.getHTML()
+          const md = turndownService.turndown(html)
+          onChange(md)
+
+          // Reset flag after a short delay
+          setTimeout(() => {
+            updatingFromExternal.current = false
+          }, 0)
+        }
+      },
+      onSelectionUpdate: ({ editor }: { editor: any }) => {
+        const { from } = editor.state.selection
+
+        // Check if selection is within a regular link
+        const linkAttrs = editor.getAttributes('link')
+        const isButton = Boolean(linkAttrs?.class?.includes('button-directive'))
+        if (linkAttrs.href && from !== 1000) {
+          const pos = editor.view.coordsAtPos(from)
+          setCurrentLinkUrl(linkAttrs.href)
+          if (isButton) {
+            // Get shape and color from DOM element classes
+            const dom = editor.view.dom
+            const selection = window.getSelection()
+            if (selection && selection.anchorNode) {
+              let currentNode = selection.anchorNode as HTMLElement
+              while (currentNode && currentNode !== dom) {
+                if (currentNode.nodeType === Node.ELEMENT_NODE) {
+                  const element = currentNode as HTMLElement
+                  if (element.classList.contains('button-directive')) {
+                    const classList = Array.from(element.classList)
+                    const shapeClass = classList.find(cls =>
+                      cls.startsWith('shape-')
+                    )
+                    const colorClass = classList.find(cls =>
+                      cls.startsWith('color-')
+                    )
+
+                    const shape = shapeClass ? shapeClass.split('-')[1] : 'pill'
+                    const color = colorClass ? colorClass.split('-')[1] : 'blue'
+
+                    setCurrentButtonData({
+                      url: element.getAttribute('href') || '#',
+                      shape,
+                      color,
+                      text: element.textContent || '',
+                      from: from,
+                      to: from + (element.textContent?.length || 0)
+                    })
+                    break
+                  }
+                }
+                currentNode = currentNode.parentNode as HTMLElement
+              }
+            }
+
+            setButtonPopoverPosition({
+              top: pos.top - 60, // Increased offset to position higher above content
+              left: pos.left
+            })
+            setShowButtonPopover(true)
+            setShowLinkPopover(false)
+          } else {
+            setLinkPopoverPosition({
+              top: pos.top - 50,
+              left: pos.left
+            })
+            setShowLinkPopover(true)
+            setShowButtonPopover(false)
+          }
         } else {
-          setLinkPopoverPosition({
-            top: pos.top - 50,
-            left: pos.left
-          })
-          setShowLinkPopover(true)
+          setShowLinkPopover(false)
           setShowButtonPopover(false)
         }
-      } else {
-        setShowLinkPopover(false)
-        setShowButtonPopover(false)
+      }
+    }),
+    [initialHtml, placeholder, singleLineMode, turndownService, onChange]
+  )
+
+  const editor = useEditor(editorConfig)
+
+  // Add a cleanup function for the editor
+  useEffect(() => {
+    return () => {
+      if (editor) {
+        // Check if destroy method exists before calling it
+        if (typeof editor.destroy === 'function') {
+          editor.destroy()
+        }
       }
     }
-  })
+  }, [editor])
 
   // Configure turndown service
   useEffect(() => {
@@ -426,24 +469,60 @@ const MarkdownEditor = ({
 
   // Update editor when content changes externally
   useEffect(() => {
-    if (editor && content !== turndownService.turndown(editor.getHTML())) {
+    // Skip if no editor or if we're already updating
+    if (!editor || updatingFromSource.current) return
+
+    // Compare current content with editor content
+    const currentEditorContent = turndownService.turndown(editor.getHTML())
+    if (content !== currentEditorContent) {
+      // Set flag to prevent recursive updates
       updatingFromExternal.current = true
-      const html = marked(content)
-      editor.commands.setContent(html)
+
+      try {
+        // Parse markdown to HTML
+        const html = marked(content)
+
+        // Update editor content
+        editor.commands.setContent(html)
+      } catch (error) {
+        console.error('Error updating editor content:', error)
+      } finally {
+        // Reset flag after a short delay to ensure state updates have completed
+        setTimeout(() => {
+          updatingFromExternal.current = false
+        }, 0)
+      }
     }
   }, [content, editor, turndownService])
 
   // Handle source markdown changes
   const handleSourceChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const newMarkdown = e.target.value
-    onChange(newMarkdown)
 
-    // Update the editor content
-    if (editor) {
-      updatingFromSource.current = true
-      marked.use({ renderer })
-      const html = marked(newMarkdown)
-      editor.commands.setContent(html)
+    // Skip if we're already updating from external source
+    if (updatingFromExternal.current) return
+
+    // Set flag to prevent recursive updates
+    updatingFromSource.current = true
+
+    try {
+      // Update parent component with new markdown
+      onChange(newMarkdown)
+
+      // Update the editor content if available
+      if (editor) {
+        try {
+          const html = marked(newMarkdown)
+          editor.commands.setContent(html)
+        } catch (error) {
+          console.error('Error updating editor from source:', error)
+        }
+      }
+    } finally {
+      // Reset flag after a short delay to ensure all updates have completed
+      setTimeout(() => {
+        updatingFromSource.current = false
+      }, 0)
     }
   }
 
@@ -455,7 +534,7 @@ const MarkdownEditor = ({
   // Handle click outside popover
   useEffect(() => {
     // Weird last-link/button showing popover bug fix
-    setTimeout(() => {
+    const initialTimeout = setTimeout(() => {
       setShowLinkPopover(false)
       setShowButtonPopover(false)
     }, 10)
@@ -472,11 +551,15 @@ const MarkdownEditor = ({
 
     document.addEventListener('mousedown', handleClickOutside)
     return () => {
+      clearTimeout(initialTimeout)
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
 
   useEffect(() => {
+    // Skip if editor is not available
+    if (!editor) return
+
     // Event listener for button selection
     const handleButtonSelected = (event: Event) => {
       const customEvent = event as CustomEvent

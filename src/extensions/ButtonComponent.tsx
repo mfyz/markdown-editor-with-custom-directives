@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useCallback } from 'react'
 import { NodeViewProps } from '@tiptap/react'
 import './ButtonDirectiveExtension.css'
 
@@ -7,12 +7,9 @@ const ButtonComponent: React.FC<NodeViewProps> = props => {
   const { text, url, shape, color } = node.attrs
   const buttonRef = useRef<HTMLAnchorElement>(null)
 
-  // Add click handler to prevent default link behavior
-  useEffect(() => {
-    const button = buttonRef.current
-    if (!button) return
-
-    const handleClick = (e: MouseEvent) => {
+  // Memoize the click handler to prevent unnecessary re-creation
+  const handleClick = useCallback(
+    (e: MouseEvent) => {
       e.preventDefault()
       e.stopPropagation()
 
@@ -42,11 +39,22 @@ const ButtonComponent: React.FC<NodeViewProps> = props => {
       window.dispatchEvent(event)
 
       return false
-    }
+    },
+    [editor, getPos, node, url, shape, color, text]
+  )
+
+  // Add click handler to prevent default link behavior
+  useEffect(() => {
+    const button = buttonRef.current
+    if (!button) return
 
     button.addEventListener('click', handleClick)
-    return () => button.removeEventListener('click', handleClick)
-  }, [editor, getPos, node, url, shape, color, text])
+
+    // Clean up event listener on unmount or when dependencies change
+    return () => {
+      button.removeEventListener('click', handleClick)
+    }
+  }, [handleClick])
 
   return (
     <a
