@@ -105,3 +105,37 @@ Click this :button[Button]{url="https://example.com" shape="pill" color="blue"}.
 ## License
 
 MIT
+
+## Development
+
+### Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/mfyz/markdown-editor-with-custom-directives.git
+cd markdown-editor-with-custom-directives
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
+
+### Testing
+
+```bash
+# Run tests
+npm test
+
+# Check code formatting
+npx prettier --check "src/**/*.{js,jsx,ts,tsx}"
+```
+
+### CI/CD
+
+This project uses GitHub Actions for continuous integration:
+
+- **Test Workflow**: Runs on every commit to all branches to ensure tests pass
+
+The workflows help maintain code quality and catch issues early in the development process.
