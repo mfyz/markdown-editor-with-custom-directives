@@ -24,7 +24,8 @@
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "preview": "vite preview",
     "test": "jest --verbose",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "prepare": "husky"
   },
   "dependencies": {
     "@tiptap/extension-color": "^2.11.5",
@@ -58,6 +59,7 @@
     "@types/react-dom": "^19.0.4",
     "@types/turndown": "^5.0.5",
     "@vitejs/plugin-react": "^4.3.4",
+    "esbuild": "^0.25.0",
     "globals": "^15.15.0",
     "husky": "^9.1.7",
     "identity-obj-proxy": "^3.0.0",

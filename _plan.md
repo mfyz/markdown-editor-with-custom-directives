@@ -317,6 +317,46 @@ This multi-layered testing approach will help us maintain a high-quality codebas
 - Create a GitHub release with the published version ✅
 - Publish the package to npm ✅
 
+### Iteration 8: Standalone VanillaJS Renderer
+
+✅ **Checkpoint 8.1: VanillaJS Renderer Implementation**
+
+- Create new `vanilla-renderer` directory in the project
+- Implement custom markdown parsing logic with zero dependencies
+- Port all custom directive parsing (color, button) to vanilla JavaScript
+- Create test suite for the vanilla renderer
+- Ensure 100% compatibility with the React renderer output
+- Write comprehensive unit tests comparing outputs between React and Vanilla renderers
+
+**Checkpoint 8.2: Style Extraction and Inlining**
+
+- Create build process to extract CSS styles from the editor's CSS files
+- Implement style extraction for button presets and color definitions
+- Create a build-time process to convert CSS to JavaScript style injection
+- Ensure dynamic styles (like new button colors) are automatically included
+- Add tests to verify style extraction and injection process
+- Implement minification process for the extracted styles
+
+✅ **Checkpoint 8.3: Build and Distribution**
+
+- Set up separate build process for vanilla renderer
+- Create UMD, ESM, and IIFE builds for different use cases
+- Implement source maps for debugging
+- Create CDN-ready distribution files
+- Add size budget monitoring to ensure the renderer stays slim
+- Create demo in README showing CDN usage
+- Document CDN usage and implementation examples
+- Write end-to-end tests for CDN distribution
+
+✅ **Checkpoint 8.4: Integration Testing**
+
+- Create test suite to verify renderer works in different environments (Node.js, browser)
+- Test with different loading methods (ESM, UMD, IIFE)
+- Verify zero dependency claim with automated checks
+- Test style independence (no external CSS required)
+- Performance testing and optimization
+- Cross-browser compatibility testing
+
 ## Review Process
 
 At each checkpoint:

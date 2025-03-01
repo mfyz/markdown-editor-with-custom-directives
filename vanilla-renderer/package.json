@@ -1,0 +1,50 @@
+{
+  "name": "@mfyz/markdown-renderer-with-custom-directives",
+  "version": "1.0.4",
+  "description": "Zero-dependency markdown renderer with custom directives",
+  "type": "module",
+  "main": "dist/index.cjs.js",
+  "module": "dist/index.esm.js",
+  "browser": "dist/index.browser.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.esm.js",
+      "require": "./dist/index.cjs.js",
+      "default": "./dist/index.esm.js"
+    }
+  },
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "test": "node --experimental-vm-modules test/index.test.js",
+    "build": "node build.js",
+    "prepare": "husky install",
+    "prepack": "npm run build"
+  },
+  "keywords": [
+    "markdown",
+    "renderer",
+    "custom-directives",
+    "vanilla-js",
+    "zero-dependency"
+  ],
+  "author": "mfyz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mfyz/markdown-editor-with-custom-directives"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.1",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2"
+  },
+  "lint-staged": {
+    "vanilla-renderer/src/**/*.js": [
+      "npm run build",
+      "npm test"
+    ]
+  }
+}
