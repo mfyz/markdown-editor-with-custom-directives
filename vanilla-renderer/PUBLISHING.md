@@ -150,3 +150,18 @@ After publishing:
 ## Testing after publihs a new version
 
 On an example codebase, using this package, if a new version is published, npm install might not catch up new version because of local cache. To reset, run `npm cache clean --force` then npm install new version.
+
+## Locally Test.
+
+- On this project
+
+  - [Optional] `npm version`
+  - `npm build`
+  - `npm pack`
+    - This generates a local tgz file with package name and version
+
+- On example code (project that consumes this package)
+  - Two ways to install the package:
+  - 1. `npm install /Users/fatih/Development/markdown-editor-with-custom-directives/vanilla-renderer/mfyz-markdown-renderer-with-custom-directives-1.0.5.tgz`
+  - 2. Or put this in package.json dependencies then `npm install`:
+    - `"@mfyz/markdown-renderer-with-custom-directives": "file:../markdown-editor-with-custom-directives/vanilla-renderer/mfyz-markdown-renderer-with-custom-directives-1.0.5.tgz",`
