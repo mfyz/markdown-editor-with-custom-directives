@@ -4,7 +4,7 @@ import MarkdownEditor from './components/MarkdownEditor'
 import MarkdownRenderer from './components/MarkdownRenderer'
 
 const exampleSingleLine =
-  'This is a :color[single line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rounded color=purple} '
+  'This is a :color[single *italic* line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rounded color=purple} '
 
 const exampleFull = `:button[Primary Button]{url=https://example.com shape=pill color=blue} and [link the](https://sanane.com) top
 
@@ -106,6 +106,18 @@ function App() {
   return (
     <div className="app-container">
       <h1>Markdown Editor Examples</h1>
+
+      <section className="example-section">
+        <h2>Placeholder</h2>
+        <div className="editor-container single-line-container">
+          <MarkdownEditor
+            content={''}
+            onChange={setSingleLineMarkdown}
+            placeholder="Enter a single line of text..."
+            singleLineMode={true}
+          />
+        </div>
+      </section>
 
       <section className="example-section">
         <h2>Single-Line Mode</h2>
