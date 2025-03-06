@@ -32,7 +32,8 @@ const MarkdownRenderer: React.FC<MarkdownRendererProps> = ({
                 'data-shape',
                 'data-color'
               ],
-              ADD_TAGS: ['span']
+              ADD_TAGS: ['span'],
+              ALLOW_DATA_ATTR: true
             })
           : htmlStr
       }

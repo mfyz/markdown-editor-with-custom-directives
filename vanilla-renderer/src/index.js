@@ -92,7 +92,9 @@ class MarkdownRenderer {
    */
   static processColorDirective(text) {
     return text.replace(this.PATTERNS.color, (match, content, color) => {
-      return `<span style="color:${color}">${content}</span>`
+      // Process markdown inside the color directive
+      const processedContent = this.processBasicMarkdown(content)
+      return `<span style="color:${color}">${processedContent}</span>`
     })
   }
 
@@ -111,7 +113,10 @@ class MarkdownRenderer {
         this.BUTTON_STYLES.colors[color] || this.BUTTON_STYLES.colors.blue
       ].join('; ')
 
-      return `<a href="${url}" style="${buttonStyle}">${content}</a>`
+      // Process markdown inside the button directive
+      const processedContent = this.processBasicMarkdown(content)
+
+      return `<a href="${url}" style="${buttonStyle}">${processedContent}</a>`
     })
   }
 
@@ -209,18 +214,18 @@ class MarkdownRenderer {
 
     let html = markdown
 
-    // Process custom directives first
-    html = this.processButtonDirective(html)
-    html = this.processColorDirective(html)
-
     // Process headlines before other markdown
     html = this.processHeadlines(html)
 
     // Process lists
     html = this.processLists(html)
 
-    // Then process basic markdown
+    // First process basic markdown that might appear outside directives
     html = this.processBasicMarkdown(html)
+
+    // Then process custom directives (which handle their own internal markdown)
+    html = this.processColorDirective(html)
+    html = this.processButtonDirective(html)
 
     // Process line breaks last
     html = this.processLineBreaks(html)

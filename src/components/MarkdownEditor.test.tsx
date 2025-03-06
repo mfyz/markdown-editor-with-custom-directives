@@ -529,4 +529,138 @@ describe('MarkdownEditor', () => {
       }
     })
   })
+
+  describe('Custom directives', () => {
+    it('renders color directive correctly in WYSIWYG mode', () => {
+      // Set the HTML that should be rendered
+      contentHtmlMap.set(
+        'currentHtml',
+        '<p>This has <span class="text-color-directive" style="color: #ff0000" data-type="color-directive">colored text</span>.</p>'
+      )
+
+      render(
+        <MarkdownEditor
+          content="This has :color[colored text]{#ff0000}."
+          onChange={() => {}}
+        />
+      )
+
+      const editorContent = screen.getByTestId('editor-content')
+      expect(editorContent.innerHTML).toContain('text-color-directive')
+      expect(editorContent.innerHTML).toContain('color: #ff0000')
+      expect(editorContent.innerHTML).toContain('colored text')
+    })
+
+    it('renders color directive with markdown formatting inside correctly in WYSIWYG mode', () => {
+      // Set the HTML that should be rendered
+      contentHtmlMap.set(
+        'currentHtml',
+        '<p>This has <span class="text-color-directive" style="color: #ff0000" data-type="color-directive">colored <strong>bold</strong> and <em>italic</em> text</span>.</p>'
+      )
+
+      render(
+        <MarkdownEditor
+          content="This has :color[colored **bold** and *italic* text]{#ff0000}."
+          onChange={() => {}}
+        />
+      )
+
+      const editorContent = screen.getByTestId('editor-content')
+      expect(editorContent.innerHTML).toContain('text-color-directive')
+      expect(editorContent.innerHTML).toContain('color: #ff0000')
+      expect(editorContent.innerHTML).toContain(
+        'colored <strong>bold</strong> and <em>italic</em> text'
+      )
+    })
+
+    it('renders button directive correctly in WYSIWYG mode', () => {
+      // Set the HTML that should be rendered
+      contentHtmlMap.set(
+        'currentHtml',
+        '<p>Click this <a class="button-directive shape-pill color-blue" href="https://example.com" data-type="button-directive">Button</a>.</p>'
+      )
+
+      render(
+        <MarkdownEditor
+          content='Click this :button[Button]{url="https://example.com" shape="pill" color="blue"}.'
+          onChange={() => {}}
+        />
+      )
+
+      const editorContent = screen.getByTestId('editor-content')
+      expect(editorContent.innerHTML).toContain('button-directive')
+      expect(editorContent.innerHTML).toContain('shape-pill')
+      expect(editorContent.innerHTML).toContain('color-blue')
+      expect(editorContent.innerHTML).toContain('href="https://example.com"')
+      expect(editorContent.innerHTML).toContain('Button')
+    })
+
+    it('renders button directive with markdown formatting inside correctly in WYSIWYG mode', () => {
+      // Set the HTML that should be rendered
+      contentHtmlMap.set(
+        'currentHtml',
+        '<p>Click this <a class="button-directive shape-pill color-blue" href="https://example.com" data-type="button-directive">Button with <strong>bold</strong> and <em>italic</em></a>.</p>'
+      )
+
+      render(
+        <MarkdownEditor
+          content='Click this :button[Button with **bold** and *italic*]{url="https://example.com" shape="pill" color="blue"}.'
+          onChange={() => {}}
+        />
+      )
+
+      const editorContent = screen.getByTestId('editor-content')
+      expect(editorContent.innerHTML).toContain('button-directive')
+      expect(editorContent.innerHTML).toContain('shape-pill')
+      expect(editorContent.innerHTML).toContain('color-blue')
+      expect(editorContent.innerHTML).toContain('href="https://example.com"')
+      expect(editorContent.innerHTML).toContain(
+        'Button with <strong>bold</strong> and <em>italic</em>'
+      )
+    })
+
+    it('handles color directive with markdown formatting in source mode', () => {
+      const onChange = jest.fn()
+      const { container } = render(
+        <MarkdownEditor
+          content="This has :color[colored **bold** and *italic* text]{#ff0000}."
+          onChange={onChange}
+        />
+      )
+
+      // Switch to source mode to see the markdown
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
+      fireEvent.click(sourceToggleButton)
+
+      const textarea = container.querySelector(
+        '.markdown-source'
+      ) as HTMLTextAreaElement
+      expect(textarea).toBeInTheDocument()
+      expect(textarea.value).toContain(
+        ':color[colored **bold** and *italic* text]{#ff0000}'
+      )
+    })
+
+    it('handles button directive with markdown formatting in source mode', () => {
+      const onChange = jest.fn()
+      const { container } = render(
+        <MarkdownEditor
+          content='Click this :button[Button with **bold** and *italic*]{url="https://example.com" shape="pill" color="blue"}.'
+          onChange={onChange}
+        />
+      )
+
+      // Switch to source mode to see the markdown
+      const sourceToggleButton = screen.getByTitle('Switch to Markdown mode')
+      fireEvent.click(sourceToggleButton)
+
+      const textarea = container.querySelector(
+        '.markdown-source'
+      ) as HTMLTextAreaElement
+      expect(textarea).toBeInTheDocument()
+      expect(textarea.value).toContain(
+        ':button[Button with **bold** and *italic*]{url="https://example.com" shape="pill" color="blue"}'
+      )
+    })
+  })
 })

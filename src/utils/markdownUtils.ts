@@ -1,5 +1,4 @@
 import { marked } from 'marked'
-import type { Renderer } from 'marked'
 
 // Helper function to parse attributes from a string
 export function parseAttributes(attrString: string): Record<string, string> {
@@ -32,22 +31,40 @@ export function configureMarked(): typeof marked {
     breaks: true
   })
 
-  // Add custom renderer for color directives
-  const renderer: Partial<Renderer> = {
-    text(token) {
-      // Replace color directives with styled spans
-      let processedText = token.text.replace(
-        /:color\[(.*?)\]\{(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\}/g,
-        (_, content, color) =>
-          `<span class="text-color-directive" style="color: ${color}" data-type="color-directive">${content}</span>`
-      )
+  // Add custom extension for color directives
+  marked.use({
+    extensions: [
+      {
+        name: 'color-directive',
+        level: 'inline',
+        start(src) {
+          return src.match(/:color\[/)?.index
+        },
+        tokenizer(src) {
+          const rule = /^:color\[(.*?)\]\{(#[0-9a-fA-F]{3,8}|[a-zA-Z]+)\}/
+          const match = rule.exec(src)
+          if (match) {
+            return {
+              type: 'color-directive',
+              raw: match[0],
+              text: match[1],
+              color: match[2]
+            }
+          }
+          return undefined
+        },
+        renderer(token) {
+          // Process markdown inside the color text
+          const tempMarked = new marked.Renderer()
+          const processedContent = marked.parseInline(token.text, {
+            renderer: tempMarked
+          })
 
-      // Keep button directives as-is for the extension to handle
-      return processedText
-    }
-  }
-
-  marked.use({ renderer })
+          return `<span class="text-color-directive" style="color: ${token.color}" data-type="color-directive">${processedContent}</span>`
+        }
+      }
+    ]
+  })
 
   // Add custom handler for button-directive elements
   marked.use({
@@ -77,7 +94,13 @@ export function configureMarked(): typeof marked {
           const shape = attrs.shape || 'pill'
           const color = attrs.color || 'blue'
 
-          return `<a class="button-directive shape-${shape} color-${color}" href="${url}" data-type="button-directive">${token.text}</a>`
+          // Process markdown inside the button text
+          const tempMarked = new marked.Renderer()
+          const processedContent = marked.parseInline(token.text, {
+            renderer: tempMarked
+          })
+
+          return `<a class="button-directive shape-${shape} color-${color}" href="${url}" data-type="button-directive">${processedContent}</a>`
         }
       }
     ]

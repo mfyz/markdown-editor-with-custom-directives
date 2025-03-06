@@ -107,6 +107,31 @@ describe('MarkdownRenderer', () => {
     expect(colorSpan).toHaveAttribute('data-type', 'color-directive')
   })
 
+  it('renders color directive with markdown formatting inside correctly', () => {
+    const { container } = render(
+      <MarkdownRenderer content="This has :color[colored **bold** and *italic* text]{#ff0000}." />
+    )
+
+    // Check for the specific span with color styling
+    const colorSpan = container.querySelector('.text-color-directive')
+    expect(colorSpan).not.toBeNull()
+
+    // Check that the span contains both the text and the formatted elements
+    expect(colorSpan?.textContent).toBe('colored bold and italic text')
+
+    // Check that the bold and italic elements are inside the color span
+    const boldInColor = colorSpan?.querySelector('strong')
+    expect(boldInColor).not.toBeNull()
+    expect(boldInColor?.textContent).toBe('bold')
+
+    const italicInColor = colorSpan?.querySelector('em')
+    expect(italicInColor).not.toBeNull()
+    expect(italicInColor?.textContent).toBe('italic')
+
+    expect(colorSpan).toHaveAttribute('style', 'color: #ff0000')
+    expect(colorSpan).toHaveAttribute('data-type', 'color-directive')
+  })
+
   it('renders button directive correctly', () => {
     render(
       <MarkdownRenderer
@@ -120,6 +145,37 @@ describe('MarkdownRenderer', () => {
     const buttonLink = document.querySelector('.button-directive')
     expect(buttonLink).toBeInTheDocument()
     expect(buttonLink?.textContent).toBe('Button')
+    expect(buttonLink).toHaveAttribute('href', 'https://example.com')
+    expect(buttonLink).toHaveAttribute('data-type', 'button-directive')
+    expect(buttonLink).toHaveClass('shape-pill')
+    expect(buttonLink).toHaveClass('color-blue')
+  })
+
+  it('renders button directive with markdown formatting inside correctly', () => {
+    const { container } = render(
+      <MarkdownRenderer
+        content={
+          'Click this :button[Button with **bold** and *italic*]{url="https://example.com" shape="pill" color="blue"}.'
+        }
+      />
+    )
+
+    // Check for the specific button link with all attributes
+    const buttonLink = container.querySelector('.button-directive')
+    expect(buttonLink).not.toBeNull()
+
+    // Check that the button contains both the text and the formatted elements
+    expect(buttonLink?.textContent).toBe('Button with bold and italic')
+
+    // Check that the bold and italic elements are inside the button
+    const boldInButton = buttonLink?.querySelector('strong')
+    expect(boldInButton).not.toBeNull()
+    expect(boldInButton?.textContent).toBe('bold')
+
+    const italicInButton = buttonLink?.querySelector('em')
+    expect(italicInButton).not.toBeNull()
+    expect(italicInButton?.textContent).toBe('italic')
+
     expect(buttonLink).toHaveAttribute('href', 'https://example.com')
     expect(buttonLink).toHaveAttribute('data-type', 'button-directive')
     expect(buttonLink).toHaveClass('shape-pill')
