@@ -1,13 +1,9 @@
-import * as esbuild from 'esbuild'
-import { fileURLToPath } from 'url'
-import { dirname, join } from 'path'
-
-const __filename = fileURLToPath(import.meta.url)
-const __dirname = dirname(__filename)
+const esbuild = require('esbuild')
+const path = require('path')
 
 // Common build options
 const commonOptions = {
-  entryPoints: [join(__dirname, 'src/index.js')],
+  entryPoints: [path.join(__dirname, 'src/index.js')],
   bundle: true,
   minify: true,
   sourcemap: true,
@@ -15,30 +11,50 @@ const commonOptions = {
   platform: 'neutral'
 }
 
-// Build ESM version
-await esbuild
-  .build({
-    ...commonOptions,
-    format: 'esm',
-    outfile: join(__dirname, 'dist/index.esm.js')
-  })
-  .catch(() => process.exit(1))
+// Build all formats
+function build() {
+  try {
+    // Build ESM version
+    esbuild
+      .build({
+        ...commonOptions,
+        entryPoints: [path.join(__dirname, 'src/index.esm.js')],
+        format: 'esm',
+        outfile: path.join(__dirname, 'dist/index.esm.mjs')
+      })
+      .then(() => {
+        console.log('ESM build completed')
 
-// Build CommonJS version
-await esbuild
-  .build({
-    ...commonOptions,
-    format: 'cjs',
-    outfile: join(__dirname, 'dist/index.cjs.js')
-  })
-  .catch(() => process.exit(1))
+        // Build CommonJS version
+        return esbuild.build({
+          ...commonOptions,
+          format: 'cjs',
+          outfile: path.join(__dirname, 'dist/index.cjs.js')
+        })
+      })
+      .then(() => {
+        console.log('CommonJS build completed')
 
-// Build browser version (IIFE)
-await esbuild
-  .build({
-    ...commonOptions,
-    format: 'iife',
-    globalName: 'MarkdownRenderer',
-    outfile: join(__dirname, 'dist/index.browser.js')
-  })
-  .catch(() => process.exit(1))
+        // Build browser version (IIFE)
+        return esbuild.build({
+          ...commonOptions,
+          format: 'iife',
+          globalName: 'MarkdownRenderer',
+          outfile: path.join(__dirname, 'dist/index.browser.js')
+        })
+      })
+      .then(() => {
+        console.log('Browser build completed')
+        console.log('All builds completed successfully!')
+      })
+      .catch(error => {
+        console.error('Build failed:', error)
+        process.exit(1)
+      })
+  } catch (error) {
+    console.error('Build setup failed:', error)
+    process.exit(1)
+  }
+}
+
+build()

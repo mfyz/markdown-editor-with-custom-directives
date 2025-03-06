@@ -24,21 +24,33 @@ npm install @mfyz/markdown-renderer-with-custom-directives
 ### ES Modules
 
 ```javascript
-import { render } from '@mfyz/markdown-renderer-with-custom-directives'
+// Option 1: Named imports
+import { renderESM } from '@mfyz/markdown-renderer-with-custom-directives'
 
 const markdown =
   '**Bold** and :color[colored]{#ff0000} with :button[Click me]{url=https://example.com shape=pill color=blue}'
-const html = render(markdown)
+const html = renderESM(markdown)
+
+// Option 2: Default import
+import MarkdownRenderer from '@mfyz/markdown-renderer-with-custom-directives'
+
+const html = MarkdownRenderer.render(markdown)
 ```
 
 ### CommonJS
 
 ```javascript
+// Option 1: Destructuring
 const { render } = require('@mfyz/markdown-renderer-with-custom-directives')
 
 const markdown =
   '**Bold** and :color[colored]{#ff0000} with :button[Click me]{url=https://example.com shape=pill color=blue}'
 const html = render(markdown)
+
+// Option 2: Using the class
+const { MarkdownRenderer } = require('@mfyz/markdown-renderer-with-custom-directives')
+
+const html = MarkdownRenderer.render(markdown)
 ```
 
 ### Browser
@@ -49,6 +61,7 @@ const html = render(markdown)
   const markdown =
     '**Bold** and :color[colored]{#ff0000} with :button[Click me]{url=https://example.com shape=pill color=blue}'
   const html = MarkdownRenderer.render(markdown)
+  document.getElementById('content').innerHTML = html
 </script>
 ```
 
@@ -96,6 +109,30 @@ Parameters:
 Returns:
 
 - HTML string with rendered markdown and custom directives
+
+## Troubleshooting
+
+### Import Issues in Next.js or other ESM environments
+
+If you encounter an error like:
+
+```
+Error: Module not found: ESM packages (@mfyz/markdown-renderer-with-custom-directives) need to be imported. Use 'import' to reference the package instead.
+```
+
+Make sure to use ES Module import syntax:
+
+```javascript
+import { renderESM } from '@mfyz/markdown-renderer-with-custom-directives'
+```
+
+### Import Issues in CommonJS environments
+
+If you're working in a CommonJS environment (like a Node.js script), use require:
+
+```javascript
+const { render } = require('@mfyz/markdown-renderer-with-custom-directives')
+```
 
 ## Development
 

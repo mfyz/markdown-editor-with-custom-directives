@@ -234,16 +234,13 @@ class MarkdownRenderer {
   }
 }
 
-const render = MarkdownRenderer.render.bind(MarkdownRenderer)
+// Convenience function to render markdown
+function render(markdown) {
+  return MarkdownRenderer.render(markdown)
+}
 
-// Export both named and default exports
-export { render }
-export default MarkdownRenderer
-
-// Support CommonJS environments
-try {
-  if (typeof module !== 'undefined') {
-    const exports = { default: MarkdownRenderer, render }
-    Object.assign(module.exports, exports)
-  }
-} catch {}
+module.exports = {
+  render,
+  MarkdownRenderer,
+  default: MarkdownRenderer
+}

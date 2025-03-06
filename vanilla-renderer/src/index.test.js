@@ -1,16 +1,7 @@
-import { render } from './index.js'
+const { render } = require('./index.js')
+const { assertEqual } = require('../test-utils.js')
 
 console.log('Running tests...\n')
-
-function assertEqual(actual, expected, message) {
-  if (actual !== expected) {
-    console.error(`❌ ${message}`)
-    console.error('Expected:', expected)
-    console.error('Actual:', actual)
-    throw new Error('Test failed')
-  }
-  console.log(`✅ ${message}`)
-}
 
 // Test headlines
 assertEqual(render('# Heading 1'), '<h1>Heading 1</h1>', 'H1 renders correctly')

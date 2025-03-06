@@ -1,8 +1,7 @@
 {
   "name": "@mfyz/markdown-renderer-with-custom-directives",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Zero-dependency markdown renderer with custom directives",
-  "type": "module",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
   "browser": "dist/index.browser.js",
@@ -10,7 +9,7 @@
     ".": {
       "import": "./dist/index.esm.js",
       "require": "./dist/index.cjs.js",
-      "default": "./dist/index.esm.js"
+      "default": "./dist/index.cjs.js"
     }
   },
   "files": [
@@ -18,7 +17,8 @@
     "src"
   ],
   "scripts": {
-    "test": "node --experimental-vm-modules src/index.test.js",
+    "test": "node src/index.test.js",
+    "test:exports": "npm run build && node postbuild-test-exports-commonjs.js && node --experimental-vm-modules postbuild-test-exports-esm.mjs",
     "build": "node build.js",
     "prepare": "husky install",
     "prepack": "npm run build"
