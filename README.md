@@ -1,6 +1,7 @@
 # Markdown Editor with Custom Directives
 
 A React markdown editor with custom directives for colored text and styled buttons.
+https://www.npmjs.com/package/@mfyz/markdown-editor-with-custom-directives
 
 ## Features
 
