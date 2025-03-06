@@ -108,3 +108,11 @@
   background-color: #f6f8fa;
   font-weight: 600;
 }
+
+.markdown-editor.is-empty .markdown-editor-content:first-child::before {
+  content: attr(placeholder);
+  float: left;
+  color: #adb5bd;
+  pointer-events: none;
+  height: 0;
+}

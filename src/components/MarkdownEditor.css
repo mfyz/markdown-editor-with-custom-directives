@@ -171,7 +171,6 @@
 .rich-editor-content-wrapper.single-line-mode .ProseMirror {
   white-space: nowrap;
   overflow-x: auto;
-  padding: 13px 16px 11px;
 }
 
 .rich-editor-content-wrapper.single-line-mode .ProseMirror p {

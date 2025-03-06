@@ -90,6 +90,7 @@ const MarkdownEditor = ({
   allowSourceView = true,
   singleLineMode = false
 }: MarkdownEditorProps) => {
+  const [isEmpty, setIsEmpty] = useState(false)
   const [isSourceMode, setIsSourceMode] = useState(false)
   const [showLinkModal, setShowLinkModal] = useState(false)
   const [showLinkPopover, setShowLinkPopover] = useState(false)
@@ -225,6 +226,8 @@ const MarkdownEditor = ({
         if (updatingFromExternal.current || updatingFromSource.current) {
           return
         }
+
+        setIsEmpty(editor.isEmpty)
 
         // Set flag to prevent recursive updates
         updatingFromExternal.current = true
@@ -580,7 +583,9 @@ const MarkdownEditor = ({
   }, [editor])
 
   return (
-    <div className={`markdown-editor ${className}`}>
+    <div
+      className={`markdown-editor ${isEmpty ? 'is-empty' : ''} ${isEditorActive ? 'is-active' : ''} ${className}`}
+    >
       {/* Show toolbar always for regular mode, or only when focused for single-line mode */}
       {(!singleLineMode || (singleLineMode && isEditorActive)) && (
         <div className="editor-toolbar-container">
