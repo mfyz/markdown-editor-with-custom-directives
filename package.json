@@ -23,8 +23,8 @@
     "lint": "prettier --check \"src/**/*.{js,jsx,ts,tsx}\"",
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx}\"",
     "preview": "vite preview",
-    "test": "npm run test:unit && npm run test:vanilla",
-    "test:unit": "jest --verbose",
+    "test": "jest --verbose",
+    "test:all": "npm run test && npm run test:vanilla",
     "test:vanilla": "cd vanilla-renderer && npm run test && npm run build && npm run test:exports && cd ..",
     "test:e2e": "playwright test",
     "prepare": "husky"

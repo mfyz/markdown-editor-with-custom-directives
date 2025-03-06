@@ -6,6 +6,9 @@ npx lint-staged
 # Run React unit tests
 npm test
 
-# Run vanilla-renderer unit tests
-cd vanilla-renderer && npm test
+# Run vanilla-renderer unit and export tests
+cd vanilla-renderer
+npm test
+npm run build
+npm run test:exports
 cd ..
