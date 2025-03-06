@@ -1,6 +1,6 @@
 {
   "name": "@mfyz/markdown-renderer-with-custom-directives",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "Zero-dependency markdown renderer with custom directives",
   "main": "dist/index.cjs.js",
   "module": "dist/index.esm.js",
