@@ -1,6 +1,6 @@
 {
   "name": "@mfyz/markdown-renderer-with-custom-directives",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Zero-dependency markdown renderer with custom directives",
   "type": "module",
   "main": "dist/index.cjs.js",
@@ -18,7 +18,7 @@
     "src"
   ],
   "scripts": {
-    "test": "node --experimental-vm-modules test/index.test.js",
+    "test": "node --experimental-vm-modules src/index.test.js",
     "build": "node build.js",
     "prepare": "husky install",
     "prepack": "npm run build"

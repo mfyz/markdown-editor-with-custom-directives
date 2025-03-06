@@ -29,25 +29,25 @@ class MarkdownRenderer {
 
   static BUTTON_STYLES = {
     shapes: {
-      pill: 'border-radius:9999px',
-      rect: 'border-radius:4px',
-      rounded: 'border-radius:8px'
+      pill: 'border-radius: 9999px',
+      rect: 'border-radius: 0',
+      rounded: 'border-radius: 5px'
     },
     colors: {
-      purple: 'background-color:#6366f1',
-      blue: 'background-color:#3b82f6',
-      green: 'background-color:#22c55e',
-      red: 'background-color:#ef4444',
-      yellow: 'background-color:#eab308',
-      gray: 'background-color:#6b7280'
+      purple: 'background-color: #8a63d2',
+      blue: 'background-color: #3b82f6',
+      green: 'background-color: #22c55e',
+      red: 'background-color: #ef4444',
+      yellow: 'background-color: #eab308',
+      gray: 'background-color: #6b7280'
     },
     base: [
-      'display:inline-block',
-      'text-decoration:none',
-      'padding:8px 16px',
-      'cursor:pointer',
-      'color:white'
-    ].join(';')
+      'display: inline-block',
+      'text-decoration: none',
+      'padding: 2px 10px',
+      'cursor: pointer',
+      'color: white'
+    ].join('; ')
   }
 
   /**
@@ -109,7 +109,7 @@ class MarkdownRenderer {
         this.BUTTON_STYLES.base,
         this.BUTTON_STYLES.shapes[shape] || this.BUTTON_STYLES.shapes.rounded,
         this.BUTTON_STYLES.colors[color] || this.BUTTON_STYLES.colors.blue
-      ].join(';')
+      ].join('; ')
 
       return `<a href="${url}" style="${buttonStyle}">${content}</a>`
     })

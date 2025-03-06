@@ -4,7 +4,7 @@ import MarkdownEditor from './components/MarkdownEditor'
 import MarkdownRenderer from './components/MarkdownRenderer'
 
 const exampleSingleLine =
-  'This is a :color[single line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rect color=red} '
+  'This is a :color[single line]{#ff0000} editor with [link](https://example.com), **bold** and *italic* text :button[Learn More]{url=https://example.com/learn shape=rounded color=purple} '
 
 const exampleFull = `:button[Primary Button]{url=https://example.com shape=pill color=blue} and [link the](https://sanane.com) top
 
